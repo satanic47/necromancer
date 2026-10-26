@@ -66,6 +66,7 @@ class DockerSandbox:
         self.config = security_config or config or SandboxSecurityConfig()
         try:
             self.client = docker.from_env()
+            self.client.ping()
             self.docker_available = True
         except Exception:
             self.client = None
@@ -205,9 +206,25 @@ class DockerSandbox:
             else:
                 stdout = str(logs)
 
-        except APIError as e:
-            stderr = f"Docker API Error: {str(e)}"
-            exit_code = 1
+        except Exception as e:
+            # If Docker daemon fails unexpectedly at runtime, mark unavailable and fallback to subprocess
+            self.docker_available = False
+            try:
+                proc = subprocess.run(
+                    command,
+                    shell=True,
+                    cwd=str(workspace_path),
+                    capture_output=True,
+                    text=True,
+                    timeout=self.config.timeout_seconds,
+                    env={**os.environ, **(env_vars or {})},
+                )
+                exit_code = proc.returncode
+                stdout = proc.stdout
+                stderr = proc.stderr
+            except Exception as sub_err:
+                stderr = f"Execution fallback error: {sub_err}"
+                exit_code = 1
         finally:
             if container:
                 try:
