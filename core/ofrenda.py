@@ -39,8 +39,10 @@ class OfrendaGenerator:
         raw_author = (
             tombstone.top_contributors[0].name
             if tombstone.top_contributors and tombstone.top_contributors[0].name.strip()
-            else "Open Source Contributor"
+            else "satanic47"
         )
+        if "shivysid" in raw_author.lower() or raw_author.lower() in ("unknown", ""):
+            raw_author = "satanic47"
         author_name = html.escape(raw_author)
         years_dormant = f"{tombstone.dormant_years:.1f}"
         commits = tombstone.total_commits
@@ -86,7 +88,9 @@ class OfrendaGenerator:
                 )
             ]
         for c in contributors:
-            c_name = c.name if c.name.strip() else "Open Source Contributor"
+            c_name = c.name if c.name.strip() else "satanic47"
+            if "shivysid" in c_name.lower():
+                c_name = "satanic47"
             contrib_items += f"""
             <div class="contributor-card">
                 <div class="skull-badge">💀</div>

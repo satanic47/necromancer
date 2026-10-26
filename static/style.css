@@ -76,9 +76,15 @@ body {
 }
 
 .flag {
-    min-width: 76px;
+    width: 86px;
+    min-width: 86px;
+    max-width: 86px;
     height: 48px;
-    padding: 0.25rem 0.55rem;
+    min-height: 48px;
+    max-height: 48px;
+    box-sizing: border-box;
+    flex: 0 0 86px;
+    padding: 0.2rem 0.25rem;
     clip-path: polygon(0% 0%, 100% 0%, 100% 84%, 50% 100%, 0% 84%);
     display: flex;
     flex-direction: column;
@@ -89,44 +95,28 @@ body {
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
-}
-
-.flag.flag-sm {
-    min-width: 64px;
-    height: 38px;
-    padding: 0.15rem 0.45rem;
-    clip-path: polygon(0% 0%, 100% 0%, 100% 82%, 50% 100%, 0% 82%);
+    overflow: hidden;
+    text-align: center;
 }
 
 .flag-icon {
-    font-size: 0.85rem;
-    line-height: 1;
-    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6));
-}
-
-.flag-icon-sm {
-    font-size: 0.75rem;
+    font-size: 0.82rem;
     line-height: 1;
     filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6));
 }
 
 .flag-text {
     font-family: var(--font-mono);
-    font-size: 0.64rem;
+    font-size: 0.60rem;
     font-weight: 800;
-    letter-spacing: 0.6px;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
     white-space: nowrap;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
-}
-
-.flag-text-sm {
-    font-family: var(--font-mono);
-    font-size: 0.58rem;
-    font-weight: 700;
-    letter-spacing: 0.4px;
-    white-space: nowrap;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .flag:nth-child(2n) { animation-delay: 0.35s; }

@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnToggleSound = document.getElementById("btnToggleSound");
     const soundIcon = document.getElementById("soundIcon");
     const soundLabel = document.getElementById("soundLabel");
+    const ambientVoiceLoop = document.getElementById("ambientVoiceLoop");
     const btnPlaySampleEulogy = document.getElementById("btnPlaySampleEulogy");
     const heroAudioPlayer = document.getElementById("heroAudioPlayer");
     const eulogyPlayingNotice = document.getElementById("eulogyPlayingNotice");
@@ -33,12 +34,12 @@ document.addEventListener("DOMContentLoaded", () => {
     let timerInterval = null;
 
     // ==========================================
-    // 1. PROCEDURAL WEB AUDIO ENGINE (Drone & Bells)
+    // 1. SCARY VOICE LOOP & AUDIBLE CRYPT SOUND ENGINE
     // ==========================================
     let audioCtx = null;
-    let droneOsc1 = null;
-    let droneOsc2 = null;
-    let droneGain = null;
+    let masterGain = null;
+    let oscList = [];
+    let noiseNode = null;
     let isSoundOn = false;
 
     function initAudioContext() {
@@ -51,83 +52,152 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function startAtmosphericDrone() {
+    function createHowlingWindNode(ctx) {
+        // Generate 2 seconds of pink/white noise buffer for eerie wind
+        const bufferSize = ctx.sampleRate * 2;
+        const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        let b0 = 0, b1 = 0, b2 = 0;
+        for (let i = 0; i < bufferSize; i++) {
+            const white = Math.random() * 2 - 1;
+            b0 = 0.99 * b0 + white * 0.05;
+            b1 = 0.95 * b1 + white * 0.05;
+            b2 = 0.85 * b2 + white * 0.05;
+            output[i] = (b0 + b1 + b2) * 0.25;
+        }
+
+        const whiteNoise = ctx.createBufferSource();
+        whiteNoise.buffer = noiseBuffer;
+        whiteNoise.loop = true;
+
+        // Bandpass filter with moving center frequency for howling wind
+        const bandpass = ctx.createBiquadFilter();
+        bandpass.type = "bandpass";
+        bandpass.frequency.setValueAtTime(450, ctx.currentTime);
+        bandpass.Q.setValueAtTime(3.0, ctx.currentTime);
+
+        // LFO to slowly sweep the wind frequency
+        const lfo = ctx.createOscillator();
+        lfo.type = "sine";
+        lfo.frequency.setValueAtTime(0.2, ctx.currentTime); // slow gust every 5s
+
+        const lfoGain = ctx.createGain();
+        lfoGain.gain.setValueAtTime(250, ctx.currentTime);
+
+        lfo.connect(lfoGain);
+        lfoGain.connect(bandpass.frequency);
+        lfo.start();
+
+        whiteNoise.connect(bandpass);
+        whiteNoise.start();
+
+        return { source: whiteNoise, filter: bandpass, lfo: lfo };
+    }
+
+    function startSpookyAmbientEngine() {
         try {
             initAudioContext();
-            droneGain = audioCtx.createGain();
-            droneGain.gain.setValueAtTime(0.001, audioCtx.currentTime);
-            droneGain.gain.exponentialRampToValueAtTime(0.08, audioCtx.currentTime + 3.0);
 
-            // Low drone 55Hz (A1)
-            droneOsc1 = audioCtx.createOscillator();
-            droneOsc1.type = "sawtooth";
-            droneOsc1.frequency.setValueAtTime(55, audioCtx.currentTime);
+            // 1. Play the terrifying continuous chanting ghost voice loop
+            if (ambientVoiceLoop) {
+                ambientVoiceLoop.volume = 0.70;
+                ambientVoiceLoop.play().catch(err => {
+                    console.warn("Continuous voice loop play prevented:", err);
+                });
+            }
 
-            // Sub-harmonic drone 110Hz (A2) with slight detune
-            droneOsc2 = audioCtx.createOscillator();
-            droneOsc2.type = "sine";
-            droneOsc2.frequency.setValueAtTime(110.5, audioCtx.currentTime);
+            // 2. Audible eerie crypt organ & wind
+            masterGain = audioCtx.createGain();
+            masterGain.gain.setValueAtTime(0.01, audioCtx.currentTime);
+            masterGain.gain.linearRampToValueAtTime(0.25, audioCtx.currentTime + 1.5);
+            masterGain.connect(audioCtx.destination);
 
-            // Lowpass filter for dark gothic ambience
-            const filter = audioCtx.createBiquadFilter();
-            filter.type = "lowpass";
-            filter.frequency.setValueAtTime(180, audioCtx.currentTime);
+            oscList = [];
+            // Dissonant minor second & fifth chords (A3, Bb3, E4, A4)
+            const frequencies = [220.0, 233.08, 329.63, 440.0];
+            frequencies.forEach(freq => {
+                const osc = audioCtx.createOscillator();
+                osc.type = "sine";
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
 
-            droneOsc1.connect(filter);
-            droneOsc2.connect(filter);
-            filter.connect(droneGain);
-            droneGain.connect(audioCtx.destination);
+                const gain = audioCtx.createGain();
+                gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
 
-            droneOsc1.start();
-            droneOsc2.start();
+                osc.connect(gain);
+                gain.connect(masterGain);
+                osc.start();
+                oscList.push(osc);
+            });
+
+            // Howling cemetery wind
+            noiseNode = createHowlingWindNode(audioCtx);
+            const windGain = audioCtx.createGain();
+            windGain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+            noiseNode.filter.connect(windGain);
+            windGain.connect(masterGain);
+
             isSoundOn = true;
             soundIcon.textContent = "🔊";
-            soundLabel.textContent = "Atmospheric Drone & Bells: ON";
+            soundLabel.textContent = "Scary Voice & Ambient Drone: ON";
             btnToggleSound.classList.add("active");
-            logTerminal("Atmospheric crypt drone awakened...", "system");
+            logTerminal("🔊 Scary Ghost Chanting Voice & Crypt Drone awakened!", "system");
+            playBellToll();
         } catch (e) {
-            console.warn("Audio init failed:", e);
+            console.error("Audio Engine error:", e);
         }
     }
 
-    function stopAtmosphericDrone() {
-        if (droneGain && audioCtx) {
+    function stopSpookyAmbientEngine() {
+        // Pause continuous voice loop
+        if (ambientVoiceLoop) {
+            ambientVoiceLoop.pause();
+            ambientVoiceLoop.currentTime = 0;
+        }
+
+        if (masterGain && audioCtx) {
             try {
-                droneGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1.0);
+                masterGain.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
                 setTimeout(() => {
-                    if (droneOsc1) { droneOsc1.stop(); droneOsc1.disconnect(); }
-                    if (droneOsc2) { droneOsc2.stop(); droneOsc2.disconnect(); }
-                    droneOsc1 = null;
-                    droneOsc2 = null;
-                    droneGain = null;
-                }, 1000);
+                    oscList.forEach(osc => {
+                        try { osc.stop(); osc.disconnect(); } catch (e) {}
+                    });
+                    oscList = [];
+                    if (noiseNode) {
+                        try {
+                            noiseNode.source.stop();
+                            noiseNode.lfo.stop();
+                        } catch (e) {}
+                        noiseNode = null;
+                    }
+                    masterGain = null;
+                }, 600);
             } catch (e) {}
         }
         isSoundOn = false;
         soundIcon.textContent = "🔇";
-        soundLabel.textContent = "Atmospheric Drone & Bells: OFF";
+        soundLabel.textContent = "Scary Voice & Ambient Drone: OFF";
         btnToggleSound.classList.remove("active");
+        logTerminal("🔇 Ambient voices silenced.", "muted");
     }
 
     function playBellToll() {
-        if (!isSoundOn) return;
         try {
             initAudioContext();
             const now = audioCtx.currentTime;
-            const freqs = [220, 440, 554.37, 659.25]; // Eerie A Minor bell harmonics
-            freqs.forEach((freq, idx) => {
+            const bellHarmonics = [220, 440, 554.37, 659.25, 880];
+            bellHarmonics.forEach((freq, idx) => {
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
                 osc.type = "sine";
-                osc.frequency.setValueAtTime(freq * (1 + (Math.random() - 0.5) * 0.02), now);
+                osc.frequency.setValueAtTime(freq * (1 + (Math.random() - 0.5) * 0.015), now);
 
-                gain.gain.setValueAtTime(0.07 / (idx + 1), now);
-                gain.gain.exponentialRampToValueAtTime(0.00001, now + 3.5);
+                gain.gain.setValueAtTime(0.12 / (idx + 1), now);
+                gain.gain.linearRampToValueAtTime(0.0001, now + 3.8);
 
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
                 osc.start(now);
-                osc.stop(now + 3.6);
+                osc.stop(now + 3.9);
             });
         } catch (e) {}
     }
@@ -135,9 +205,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (btnToggleSound) {
         btnToggleSound.addEventListener("click", () => {
             if (!isSoundOn) {
-                startAtmosphericDrone();
+                startSpookyAmbientEngine();
             } else {
-                stopAtmosphericDrone();
+                stopSpookyAmbientEngine();
             }
         });
     }
@@ -223,7 +293,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 logTerminal(`ElevenLabs eulogy error: ${err.message}`, "error");
             } finally {
                 btnPlaySampleEulogy.disabled = false;
-                btnPlaySampleEulogy.innerHTML = "<span class='audio-btn-icon'>▶️</span><span>Hear ElevenLabs Spoken Eulogy Preview</span>";
+                btnPlaySampleEulogy.innerHTML = "<span class='audio-btn-icon'>▶️</span><span>Hear Deep Spooky Eulogy (satanic47)</span>";
             }
         });
     }
@@ -313,9 +383,12 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("tsDormant").textContent = (data.dormant_years || 8.5).toFixed(1);
             document.getElementById("tsCommits").textContent = data.total_commits || 47;
             
-            const author = (data.top_contributors && data.top_contributors.length > 0)
+            let author = (data.top_contributors && data.top_contributors.length > 0)
                 ? data.top_contributors[0].name
-                : "Open Source Contributor";
+                : "satanic47";
+            if (author.toLowerCase().includes("shivysid") || author.toLowerCase() === "unknown") {
+                author = "satanic47";
+            }
             document.getElementById("tsAuthor").textContent = author;
             tombstoneCard.classList.remove("hidden");
 

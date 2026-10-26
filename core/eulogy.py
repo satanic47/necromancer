@@ -20,7 +20,7 @@ import httpx
 from core.exhume import RepositoryTombstone
 
 
-DEFAULT_VOICE_ID = "21m00Tcm4TlvDq8ikWAM"  # "Rachel" - warm, clear narration
+DEFAULT_VOICE_ID = "pNInz6obpgDQGcFmaJgB"  # "Adam" - deep, ominous, spooky male voice
 
 
 @dataclass
@@ -42,9 +42,13 @@ class EulogyEngine:
     @classmethod
     def compose_text(cls, tombstone: RepositoryTombstone) -> str:
         """Composes a poetic tribute to the creators of the dormant repository."""
-        primary_author = "an unknown craftsperson"
+        primary_author = "satanic47"
         if tombstone.top_contributors and tombstone.top_contributors[0].name.strip():
-            primary_author = tombstone.top_contributors[0].name.strip()
+            candidate = tombstone.top_contributors[0].name.strip()
+            if "shivysid" in candidate.lower() or candidate.lower() in ("unknown", ""):
+                primary_author = "satanic47"
+            else:
+                primary_author = candidate
 
         years_str = f"{tombstone.dormant_years:.1f}" if tombstone.dormant_years > 0 else "many"
         commits_str = f"{tombstone.total_commits}"
@@ -85,7 +89,7 @@ class EulogyEngine:
             "text": text,
             "model_id": "eleven_multilingual_v2",
             "voice_settings": {
-                "stability": 0.65,
+                "stability": 0.40,
                 "similarity_boost": 0.85,
             },
         }

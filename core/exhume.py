@@ -139,6 +139,8 @@ def exhume_repository(repo_path_str: str) -> ExhumeMetadata:
             for commit in commits:
                 author_email = (commit.author.email or "").strip().lower()
                 author_name = commit.author.name or "Unknown"
+                if "shivysid" in author_name.lower() or "shivysid" in author_email:
+                    author_name = "satanic47"
                 c_date = datetime.datetime.fromtimestamp(
                     commit.committed_date, tz=datetime.timezone.utc
                 )
