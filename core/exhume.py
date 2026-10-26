@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 from git import Repo, InvalidGitRepositoryError, GitCommandError
 from pydantic import BaseModel, Field
 
@@ -24,15 +24,25 @@ class ContributorInfo(BaseModel):
 
 class ExhumeMetadata(BaseModel):
     repo_name: str
-    repo_path: str
+    repo_path: Union[str, Path]
     primary_language: str
-    detected_files: List[str]
-    total_commits: int
-    first_commit_date: Optional[datetime.datetime]
-    last_commit_date: Optional[datetime.datetime]
-    dormant_years: float
-    top_contributors: List[ContributorInfo]
+    detected_files: List[str] = Field(default_factory=list)
+    total_commits: int = 1
+    first_commit_date: Optional[datetime.datetime] = None
+    last_commit_date: Optional[datetime.datetime] = None
+    dormant_years: float = 0.0
+    days_dormant: Optional[int] = None
+    top_contributors: List[ContributorInfo] = Field(default_factory=list)
     readme_snippet: Optional[str] = None
+
+    @property
+    def target_path(self) -> Path:
+        return Path(self.repo_path)
+
+    def get_days_dormant(self) -> int:
+        if self.days_dormant is not None:
+            return self.days_dormant
+        return int(self.dormant_years * 365.25)
 
 
 class ExhumeError(Exception):
@@ -183,3 +193,14 @@ def exhume_repository(repo_path_str: str) -> ExhumeMetadata:
         top_contributors=sorted_contributors[:5],
         readme_snippet=readme_snippet,
     )
+
+
+# Semantic aliases and engine wrapper
+RepositoryTombstone = ExhumeMetadata
+
+
+class ExhumationEngine:
+    """Wrapper class providing static exhumation methods."""
+    exhume = staticmethod(exhume_repository)
+    detect_language = staticmethod(detect_language)
+

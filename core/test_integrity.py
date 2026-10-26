@@ -22,6 +22,9 @@ class ParsedSummary(BaseModel):
     skipped: int = 0
     raw_summary: str = ""
 
+    def to_dict(self) -> dict:
+        return self.model_dump() if hasattr(self, "model_dump") else self.dict()
+
 
 class IntegrityAssessment(BaseModel):
     is_valid: bool
@@ -29,6 +32,9 @@ class IntegrityAssessment(BaseModel):
     baseline_passed: int
     current_passed: int
     delta: int
+
+    def to_dict(self) -> dict:
+        return self.model_dump() if hasattr(self, "model_dump") else self.dict()
 
 
 class TestIntegrityParser:

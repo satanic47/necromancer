@@ -26,8 +26,8 @@ class SandboxResult:
     command: str
     exit_code: int
     stdout: str
-    stderr: str
-    execution_time_seconds: float
+    stderr: str = ""
+    execution_time_seconds: float = 0.0
     timed_out: bool = False
 
 
@@ -59,9 +59,10 @@ class DockerSandbox:
         self,
         base_image: str = "python:3.10-slim",
         security_config: Optional[SandboxSecurityConfig] = None,
+        config: Optional[SandboxSecurityConfig] = None,
     ):
         self.base_image = base_image
-        self.config = security_config or SandboxSecurityConfig()
+        self.config = security_config or config or SandboxSecurityConfig()
         try:
             self.client = docker.from_env()
         except DockerException as e:
@@ -69,12 +70,13 @@ class DockerSandbox:
                 f"Docker daemon is unreachable. Verify Docker is running: {str(e)}"
             )
 
-    def _ensure_image(self) -> None:
+    def _ensure_image(self, target_image: Optional[str] = None) -> None:
         """Verifies or pulls the target image locally."""
+        img = target_image or self.base_image
         try:
-            self.client.images.get(self.base_image)
+            self.client.images.get(img)
         except ImageNotFound:
-            self.client.images.pull(self.base_image)
+            self.client.images.pull(img)
 
     def execute_in_sandbox(
         self,
@@ -82,12 +84,14 @@ class DockerSandbox:
         command: str,
         env_vars: Optional[Dict[str, str]] = None,
         cache_volume_name: Optional[str] = "necromancer-pip-cache",
+        image: Optional[str] = None,
     ) -> SandboxResult:
         """
         Executes a command inside an isolated container with an isolated workspace copy.
         The original host repo is NEVER exposed with write permissions.
         """
-        self._ensure_image()
+        active_image = image or self.base_image
+        self._ensure_image(active_image)
 
         temp_dir = tempfile.mkdtemp(prefix="necromancer_ws_")
         workspace_path = Path(temp_dir) / "workspace"
@@ -181,3 +185,6 @@ class DockerSandbox:
             execution_time_seconds=elapsed,
             timed_out=timed_out,
         )
+
+    # Alias for convenience
+    run_command = execute_in_sandbox
