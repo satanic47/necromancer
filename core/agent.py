@@ -273,7 +273,7 @@ class ResurrectionAgent:
 
             # Step 3: Run Baseline Tests
             s3_start = time.time()
-            test_cmd = "pytest" if tombstone.primary_language == "python" else "npm test"
+            test_cmd = "npm test" if ((repo_path / "package.json").exists() or tombstone.primary_language == "node") else "pytest"
             base_run = self.sandbox.run_command(repo_path, test_cmd, image=era_profile.docker_base_image)
             baseline_summary = TestIntegrityParser.parse_output(base_run.stdout + "\n" + base_run.stderr)
 
@@ -377,8 +377,17 @@ class ResurrectionAgent:
                     )
                     continue
 
-                # Re-run sandbox test evaluation
-                eval_run = self.sandbox.run_command(repo_path, test_cmd, image=era_profile.docker_base_image)
+                # Re-run sandbox test evaluation (if modern test suite was synthesized, evaluate with pytest)
+                eval_cmd = (
+                    "pytest"
+                    if (
+                        (repo_path / "tests" / "test_modern_2026.py").exists()
+                        or (repo_path / "tests" / "test_pinned_vintage.py").exists()
+                        or not (repo_path / "package.json").exists()
+                    )
+                    else test_cmd
+                )
+                eval_run = self.sandbox.run_command(repo_path, eval_cmd, image=era_profile.docker_base_image)
                 candidate_summary = TestIntegrityParser.parse_output(eval_run.stdout + "\n" + eval_run.stderr)
                 integrity = TestIntegrityParser.evaluate_integrity(baseline_summary, candidate_summary)
 

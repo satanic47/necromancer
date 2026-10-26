@@ -70,9 +70,14 @@ def detect_language(repo_path: Path) -> tuple[str, list[str]]:
             "yarn.lock",
             "pnpm-lock.yaml",
         ],
+        "ruby": [
+            "Rakefile",
+            "Gemfile",
+            "Gemfile.lock",
+        ],
     }
 
-    matched: dict[str, list[str]] = {"python": [], "node": []}
+    matched: dict[str, list[str]] = {"python": [], "node": [], "ruby": []}
 
     for lang, filenames in indicators.items():
         for fname in filenames:
@@ -80,19 +85,24 @@ def detect_language(repo_path: Path) -> tuple[str, list[str]]:
                 matched[lang].append(fname)
 
     # Heuristic scoring
-    if len(matched["python"]) >= len(matched["node"]) and matched["python"]:
+    if len(matched["python"]) >= len(matched["node"]) and len(matched["python"]) >= len(matched["ruby"]) and matched["python"]:
         return "python", matched["python"]
-    elif matched["node"]:
+    elif len(matched["node"]) >= len(matched["ruby"]) and matched["node"]:
         return "node", matched["node"]
+    elif matched["ruby"]:
+        return "ruby", matched["ruby"]
 
     # Fallback inspection of file extensions
     py_files = list(repo_path.glob("**/*.py"))[:5]
     js_files = list(repo_path.glob("**/*.js"))[:5]
+    rb_files = list(repo_path.glob("**/*.rb"))[:5]
 
-    if len(py_files) > len(js_files):
+    if len(py_files) >= len(js_files) and len(py_files) >= len(rb_files) and py_files:
         return "python", [f.name for f in py_files]
-    elif js_files:
+    elif len(js_files) >= len(rb_files) and js_files:
         return "node", [f.name for f in js_files]
+    elif rb_files:
+        return "ruby", [f.name for f in rb_files]
 
     return "unknown", []
 
