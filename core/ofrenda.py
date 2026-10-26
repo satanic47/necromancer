@@ -15,6 +15,7 @@ authors of resurrected repositories, adhering to Día de los Muertos traditions:
 from __future__ import annotations
 
 import html
+import re
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
@@ -36,6 +37,7 @@ class OfrendaGenerator:
     ) -> str:
         """Constructs an offline, dependency-free HTML document."""
         repo_name = html.escape(tombstone.repo_name)
+        repo_clean = re.sub(r"[^a-zA-Z0-9_\-]", "_", tombstone.repo_name)
         raw_author = (
             tombstone.top_contributors[0].name
             if tombstone.top_contributors and tombstone.top_contributors[0].name.strip()
@@ -141,6 +143,7 @@ class OfrendaGenerator:
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ofrenda de {repo_name} | Necromancer Memorial</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {{
             --bg-obsidian: #0c0d10;
@@ -262,6 +265,87 @@ class OfrendaGenerator:
         .strategy-banner.port-present strong {{ color: var(--success-jade); display: block; }}
         .strategy-icon {{ font-size: 1.8rem; }}
         .strategy-text small {{ color: var(--muted-text); }}
+
+        /* Death Certificate Card */
+        .death-certificate-card {{
+            background: linear-gradient(135deg, #13151c, #0b0c10);
+            border: 2px solid var(--cempasuchil);
+            box-shadow: 0 0 25px rgba(255, 191, 0, 0.15), inset 0 0 30px rgba(0, 0, 0, 0.6);
+            border-radius: 14px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }}
+        .cert-header {{
+            text-align: center;
+            border-bottom: 1px dashed rgba(255, 191, 0, 0.4);
+            padding-bottom: 1.25rem;
+            margin-bottom: 1.5rem;
+        }}
+        .cert-seal {{
+            font-size: 2.8rem;
+            margin-bottom: 0.25rem;
+        }}
+        .cert-title {{
+            color: var(--cempasuchil);
+            font-size: 1.4rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 800;
+        }}
+        .cert-subtitle {{
+            color: var(--muted-text);
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            margin-top: 0.25rem;
+        }}
+        .cert-grid {{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }}
+        .cert-field strong {{
+            display: block;
+            color: var(--marigold);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.25rem;
+        }}
+        .cert-field span {{
+            color: var(--pale-bone);
+            font-weight: 600;
+        }}
+        .cert-footer-banner {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px dashed rgba(255, 191, 0, 0.4);
+            padding-top: 1rem;
+            font-size: 0.8rem;
+            color: var(--muted-text);
+        }}
+        .btn-pdf-export {{
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, #ff7518, #ffbf00);
+            color: #0c0d10;
+            font-weight: 700;
+            font-size: 0.95rem;
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 117, 24, 0.4);
+            transition: all 0.2s ease;
+        }}
+        .btn-pdf-export:hover {{
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 117, 24, 0.6);
+        }}
 
         /* Audio Altar */
         .audio-altar {{
@@ -453,6 +537,51 @@ class OfrendaGenerator:
         <!-- Strategy Badge -->
         {strategy_badge}
 
+        <!-- Official Death Certificate Card & PDF Download -->
+        <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
+            <button type="button" onclick="downloadDeathCertificatePDF()" class="btn-pdf-export">
+                📜 Download Official PDF Death Certificate
+            </button>
+        </div>
+
+        <section id="deathCertificateCard" class="death-certificate-card">
+            <div class="cert-header">
+                <div class="cert-seal">💀 🏵️ 💀</div>
+                <h2 class="cert-title">Official Death Certificate & Rebirth Record</h2>
+                <p class="cert-subtitle">DEV × Hacktoberfest 2026 • Issued Under Authority of the Ghost in the Machine</p>
+            </div>
+            <div class="cert-grid">
+                <div class="cert-field">
+                    <strong>Deceased Architecture</strong>
+                    <span>{repo_name}</span>
+                </div>
+                <div class="cert-field">
+                    <strong>Lead Creator / Honored Author</strong>
+                    <span>{author_name}</span>
+                </div>
+                <div class="cert-field">
+                    <strong>Epoch of Demise</strong>
+                    <span>{last_date} ({years_dormant} Years Dormant)</span>
+                </div>
+                <div class="cert-field">
+                    <strong>Primary Ecosystem</strong>
+                    <span>{result.era_profile.language.upper()} ({result.era_profile.era_name})</span>
+                </div>
+                <div class="cert-field">
+                    <strong>Rebirth Strategy</strong>
+                    <span>{strategy}</span>
+                </div>
+                <div class="cert-field">
+                    <strong>Integrity Verification</strong>
+                    <span style="color: var(--success-jade);">✓ 100% Passing ({result.final_summary.passed} Passed / 0 Regressed)</span>
+                </div>
+            </div>
+            <div class="cert-footer-banner">
+                <span>Authenticity Hash: <code>necromancer-{repo_clean}-{result.era_profile.year}</code></span>
+                <span>Altar of Día de los Muertos • Preserved in Eternity</span>
+            </div>
+        </section>
+
         <!-- Audio Altar -->
         {audio_section}
 
@@ -544,6 +673,21 @@ class OfrendaGenerator:
                 details.innerHTML = "<strong>Modern Resurrected Era:</strong> {result.era_profile.recommended_runtime_version} Runtime<br><strong>Status:</strong> {result.final_summary.passed} passing unit tests. Integrity validated.";
             }}
         }});
+        function downloadDeathCertificatePDF() {{
+            const element = document.getElementById('deathCertificateCard');
+            if (typeof html2pdf !== 'undefined') {{
+                const opt = {{
+                    margin: 10,
+                    filename: 'Death-Certificate-{repo_clean}.pdf',
+                    image: {{ type: 'jpeg', quality: 0.98 }},
+                    html2canvas: {{ scale: 2, useCORS: true, backgroundColor: '#0c0d10' }},
+                    jsPDF: {{ unit: 'mm', format: 'a4', orientation: 'portrait' }}
+                }};
+                html2pdf().set(opt).from(element).save();
+            }} else {{
+                window.print();
+            }}
+        }}
     </script>
 </body>
 </html>

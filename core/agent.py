@@ -364,7 +364,7 @@ class ResurrectionAgent:
                         target_path.parent.mkdir(parents=True, exist_ok=True)
                         target_path.write_text(content, encoding="utf-8")
                         applied_files.append(rel_p)
-                        patches.append({"file": rel_p, "action": "updated"})
+                        patches.append({"file": rel_p, "action": "updated", "content": content})
                 except Exception as err:
                     steps.append(
                         AgentStepLog(

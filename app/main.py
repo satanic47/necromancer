@@ -382,6 +382,7 @@ async def websocket_seance_endpoint(websocket: WebSocket):
             "error_message": res.error_message,
             "total_steps": res.total_steps,
             "ofrenda_html": ofrenda_html,
+            "patches_applied": res.patches_applied,
         })
 
     except WebSocketDisconnect:

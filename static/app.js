@@ -16,9 +16,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const sliderOutput = document.getElementById("sliderOutput");
     const btnViewOfrenda = document.getElementById("btnViewOfrenda");
     const btnDownloadHtml = document.getElementById("btnDownloadHtml");
+    const btnDownloadDeathCert = document.getElementById("btnDownloadDeathCert");
     const ofrendaModal = document.getElementById("ofrendaModal");
     const btnCloseModal = document.getElementById("btnCloseModal");
     const ofrendaFrame = document.getElementById("ofrendaFrame");
+
+    // Tabs & Diff Viewer
+    const tabTerminal = document.getElementById("tabTerminal");
+    const tabDiff = document.getElementById("tabDiff");
+    const terminalPane = document.getElementById("terminalPane");
+    const diffPane = document.getElementById("diffPane");
+    const diffFileList = document.getElementById("diffFileList");
+    const diffActiveFile = document.getElementById("diffActiveFile");
+    const diffCodeDisplay = document.getElementById("diffCodeDisplay");
+    const btnCopyPatch = document.getElementById("btnCopyPatch");
 
     // Audio & Sound Controls
     const btnToggleSound = document.getElementById("btnToggleSound");
@@ -339,12 +350,170 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // ==========================================
+    // 5B. XTERM.JS TERMINAL INITIALIZATION
+    // ==========================================
+    let term = null;
+    let fitAddon = null;
+
+    try {
+        if (typeof Terminal !== "undefined") {
+            term = new Terminal({
+                theme: {
+                    background: "#090a0e",
+                    foreground: "#d1d5db",
+                    cursor: "#ffbf00",
+                    green: "#2ecc71",
+                    red: "#ff4d4f",
+                    yellow: "#ffbf00",
+                    cyan: "#00f5d4",
+                    blue: "#38bdf8",
+                    magenta: "#d946ef",
+                    brightWhite: "#ffffff"
+                },
+                fontFamily: 'Consolas, "Fira Code", monospace',
+                fontSize: 13,
+                lineHeight: 1.4,
+                cursorBlink: true,
+                convertEol: true,
+                scrollback: 5000,
+            });
+            if (typeof FitAddon !== "undefined" && FitAddon.FitAddon) {
+                fitAddon = new FitAddon.FitAddon();
+                term.loadAddon(fitAddon);
+            }
+            const container = document.getElementById("xtermContainer");
+            if (container) {
+                term.open(container);
+                if (fitAddon) fitAddon.fit();
+                term.writeln("\x1b[1;35m=== Necromancer Ghost in the Machine Séance Initialized ===\x1b[0m");
+                term.writeln("\x1b[90mAwaiting exhumation instruction to awaken the spirits of legacy code...\x1b[0m\r\n");
+            }
+            window.addEventListener("resize", () => {
+                if (fitAddon) fitAddon.fit();
+            });
+        }
+    } catch (err) {
+        console.warn("xterm.js initialization fallback:", err);
+    }
+
+    // Console Tab Switching
+    if (tabTerminal && tabDiff) {
+        tabTerminal.addEventListener("click", () => {
+            tabTerminal.classList.add("active");
+            tabDiff.classList.remove("active");
+            terminalPane.classList.remove("hidden");
+            diffPane.classList.add("hidden");
+            if (fitAddon) fitAddon.fit();
+        });
+
+        tabDiff.addEventListener("click", () => {
+            tabDiff.classList.add("active");
+            tabTerminal.classList.remove("active");
+            diffPane.classList.remove("hidden");
+            terminalPane.classList.add("hidden");
+        });
+    }
+
+    // ==========================================
+    // 5C. PR DIFF VIEWER & SYNTAX HIGHLIGHTING (PRISM.JS)
+    // ==========================================
+    let currentPatches = [];
+
+    function renderDiffViewer(patches) {
+        currentPatches = patches || [];
+        if (!diffFileList || !diffCodeDisplay) return;
+        diffFileList.innerHTML = "";
+
+        if (currentPatches.length === 0) {
+            diffFileList.innerHTML = '<div class="diff-file-empty">No file modifications required — test baseline validated.</div>';
+            diffCodeDisplay.textContent = "# Clean repository resurrection.\n# All baseline tests passed without surgical patches.";
+            if (btnCopyPatch) btnCopyPatch.classList.add("hidden");
+            return;
+        }
+
+        currentPatches.forEach((patch, index) => {
+            const item = document.createElement("button");
+            item.type = "button";
+            item.className = `diff-file-item ${index === 0 ? "active" : ""}`;
+            const fileName = patch.file || patch.file_path || `patch_${index + 1}`;
+            item.innerHTML = `<span>📄</span> <span>${fileName}</span>`;
+            item.addEventListener("click", () => {
+                document.querySelectorAll(".diff-file-item").forEach(el => el.classList.remove("active"));
+                item.classList.add("active");
+                displayPatchFile(patch);
+            });
+            diffFileList.appendChild(item);
+        });
+
+        displayPatchFile(currentPatches[0]);
+    }
+
+    function displayPatchFile(patch) {
+        if (!diffCodeDisplay) return;
+        const fileName = patch.file || patch.file_path || "modified_file";
+        if (diffActiveFile) diffActiveFile.textContent = `📄 ${fileName}`;
+
+        let content = patch.content || patch.diff || "";
+        if (!content) {
+            content = `# File: ${fileName}\n# Status: ${patch.action || "updated"}\n# Surgical patch successfully merged into workspace.`;
+        }
+        diffCodeDisplay.textContent = content;
+
+        let lang = "python";
+        if (fileName.endsWith(".toml")) lang = "toml";
+        else if (fileName.endsWith(".json")) lang = "json";
+        else if (fileName.endsWith(".txt") || fileName.endsWith(".conf")) lang = "diff";
+
+        diffCodeDisplay.className = `language-${lang}`;
+        if (typeof Prism !== "undefined") {
+            Prism.highlightElement(diffCodeDisplay);
+        }
+
+        if (btnCopyPatch) {
+            btnCopyPatch.classList.remove("hidden");
+            btnCopyPatch.onclick = () => {
+                navigator.clipboard.writeText(content).then(() => {
+                    btnCopyPatch.textContent = "✔ Copied!";
+                    setTimeout(() => { btnCopyPatch.textContent = "📋 Copy Patch"; }, 2000);
+                });
+            };
+        }
+    }
+
     function logTerminal(text, type = "normal") {
-        const line = document.createElement("div");
-        line.className = `terminal-line ${type}`;
-        line.textContent = `[${new Date().toLocaleTimeString()}] ${text}`;
-        terminal.appendChild(line);
-        terminal.scrollTop = terminal.scrollHeight;
+        const timeStr = new Date().toLocaleTimeString();
+
+        // Write to xterm.js with ANSI colors if available
+        if (term) {
+            let ansiText = text;
+            if (type === "system") {
+                ansiText = `\x1b[1;35m[${timeStr}]\x1b[0m \x1b[1;36m${text}\x1b[0m`;
+            } else if (type === "thought") {
+                ansiText = `\x1b[90m[${timeStr}]\x1b[0m \x1b[1;33m${text}\x1b[0m`;
+            } else if (type === "tool") {
+                ansiText = `\x1b[90m[${timeStr}]\x1b[0m \x1b[36m${text}\x1b[0m`;
+            } else if (type === "success") {
+                ansiText = `\x1b[90m[${timeStr}]\x1b[0m \x1b[1;32m✔ ${text}\x1b[0m`;
+            } else if (type === "error") {
+                ansiText = `\x1b[90m[${timeStr}]\x1b[0m \x1b[1;31m✘ ${text}\x1b[0m`;
+            } else {
+                ansiText = text
+                    .replace(/(\d+)\s+passed/gi, "\x1b[1;32m$1 passed\x1b[0m")
+                    .replace(/(\d+)\s+failed/gi, "\x1b[1;31m$1 failed\x1b[0m");
+                ansiText = `\x1b[90m[${timeStr}]\x1b[0m ${ansiText}`;
+            }
+            term.writeln(ansiText);
+        }
+
+        // Also write to DOM terminal
+        if (terminal) {
+            const line = document.createElement("div");
+            line.className = `terminal-line ${type}`;
+            line.textContent = `[${timeStr}] ${text}`;
+            terminal.appendChild(line);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
     }
 
     function startTimer() {
@@ -408,8 +577,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const strategy = document.querySelector('input[name="strategy"]:checked').value;
 
         terminal.innerHTML = "";
+        if (term) {
+            term.clear();
+            term.writeln(`\x1b[1;35m=== Commencing Séance for '${repo}' [Strategy: ${strategy}] ===\x1b[0m\r\n`);
+        }
         btnViewOfrenda.classList.add("hidden");
         btnDownloadHtml.classList.add("hidden");
+        btnDownloadDeathCert.classList.add("hidden");
 
         logTerminal(`Commencing Séance for '${repo}' with strategy: ${strategy}`, "system");
         startTimer();
@@ -439,10 +613,14 @@ document.addEventListener("DOMContentLoaded", () => {
                     } else {
                         logTerminal(`⚠️ Séance halted: ${msg.error_message}`, "error");
                     }
+                    if (msg.patches_applied) {
+                        renderDiffViewer(msg.patches_applied);
+                    }
                     if (msg.ofrenda_html) {
                         activeOfrendaHtml = msg.ofrenda_html;
                         btnViewOfrenda.classList.remove("hidden");
                         btnDownloadHtml.classList.remove("hidden");
+                        btnDownloadDeathCert.classList.remove("hidden");
                     }
                 }
             };
@@ -480,6 +658,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 logTerminal(`Séance result: ${data.error_message}`, "error");
             }
 
+            if (data.patches_applied) {
+                renderDiffViewer(data.patches_applied);
+            }
+
             // Fetch Ofrenda
             const ofrendaRes = await fetch("/api/ofrenda", {
                 method: "POST",
@@ -491,6 +673,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 activeOfrendaHtml = ofrendaData.html;
                 btnViewOfrenda.classList.remove("hidden");
                 btnDownloadHtml.classList.remove("hidden");
+                btnDownloadDeathCert.classList.remove("hidden");
             }
         } catch (err) {
             stopTimer();
@@ -522,4 +705,47 @@ document.addEventListener("DOMContentLoaded", () => {
         a.download = `ofrenda-${Date.now()}.html`;
         a.click();
     });
+
+    // Download PDF Death Certificate
+    if (btnDownloadDeathCert) {
+        btnDownloadDeathCert.addEventListener("click", () => {
+            playBellToll();
+            if (!activeOfrendaHtml) {
+                return alert("Please exhume and resurrect a repository first to generate the death certificate.");
+            }
+
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(activeOfrendaHtml, "text/html");
+            const certCard = doc.getElementById("deathCertificateCard");
+
+            if (typeof html2pdf !== "undefined" && certCard) {
+                const tempDiv = document.createElement("div");
+                tempDiv.style.position = "fixed";
+                tempDiv.style.left = "-9999px";
+                tempDiv.style.width = "750px";
+                tempDiv.style.background = "#0c0d10";
+                tempDiv.style.padding = "25px";
+                tempDiv.style.color = "#f4f0e8";
+                tempDiv.style.fontFamily = "sans-serif";
+                tempDiv.appendChild(certCard.cloneNode(true));
+                document.body.appendChild(tempDiv);
+
+                const repoRaw = repoInput.value.split("/").pop().replace(".git", "") || "repository";
+                const opt = {
+                    margin: 8,
+                    filename: `Death-Certificate-${repoRaw}.pdf`,
+                    image: { type: "jpeg", quality: 0.98 },
+                    html2canvas: { scale: 2, useCORS: true, backgroundColor: "#0c0d10" },
+                    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+                };
+
+                html2pdf().set(opt).from(tempDiv).save().then(() => {
+                    document.body.removeChild(tempDiv);
+                    logTerminal("📜 Official PDF Death Certificate exported successfully!", "success");
+                });
+            } else {
+                btnViewOfrenda.click();
+            }
+        });
+    }
 });

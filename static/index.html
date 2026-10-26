@@ -9,6 +9,22 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- xterm.js Terminal with Fit Addon -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/css/xterm.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/lib/xterm.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@xterm/addon-fit@0.10.0/lib/addon-fit.min.js"></script>
+
+    <!-- Prism.js Syntax Highlighting for PR Diffs -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-diff.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-toml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+
+    <!-- html2pdf for One-Click Death Certificate PDF Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
     <!-- Ghostly Background Fog Canvas -->
@@ -188,7 +204,8 @@
                 <div class="console-card stone-card">
                     <div class="console-header">
                         <div class="console-tabs">
-                            <span class="tab active">🔮 Live Séance Chamber</span>
+                            <button type="button" class="console-tab-btn active" id="tabTerminal">🔮 xterm.js Terminal</button>
+                            <button type="button" class="console-tab-btn" id="tabDiff">📜 Side-by-Side PR Diffs</button>
                         </div>
                         <div class="console-vitals">
                             <span id="vitalTimer">⏱️ 0.0s</span>
@@ -196,14 +213,36 @@
                         </div>
                     </div>
                     
-                    <div id="consoleTerminal" class="console-terminal">
-                        <div class="terminal-line system">=== Necromancer Ghost in the Machine Séance Initialized ===</div>
-                        <div class="terminal-line muted">Awaiting exhumation instruction to awaken the spirits of legacy code...</div>
+                    <!-- Terminal Tab Pane -->
+                    <div id="terminalPane" class="console-pane active">
+                        <div id="xtermContainer" class="xterm-container"></div>
+                        <div id="consoleTerminal" class="console-terminal hidden">
+                            <div class="terminal-line system">=== Necromancer Ghost in the Machine Séance Initialized ===</div>
+                            <div class="terminal-line muted">Awaiting exhumation instruction to awaken the spirits of legacy code...</div>
+                        </div>
+                    </div>
+
+                    <!-- Side-by-Side PR Diff Pane -->
+                    <div id="diffPane" class="console-pane hidden">
+                        <div class="diff-viewer-wrapper">
+                            <div class="diff-file-sidebar" id="diffFileList">
+                                <div class="diff-file-empty">Awaiting séance patch synthesis...</div>
+                            </div>
+                            <div class="diff-code-panel" id="diffCodePanel">
+                                <div class="diff-code-header">
+                                    <span id="diffActiveFile">Select a modified file</span>
+                                    <button type="button" id="btnCopyPatch" class="btn-copy-patch hidden">📋 Copy Patch</button>
+                                </div>
+                                <pre class="diff-pre"><code id="diffCodeDisplay" class="language-python"># Once the séance applies surgical patches,
+# side-by-side syntax highlighted PR diffs will appear here.</code></pre>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="console-actions">
                         <button id="btnViewOfrenda" class="btn btn-marigold hidden">🌼 Behold The Sacred Ofrenda</button>
-                        <button id="btnDownloadHtml" class="btn btn-outline hidden">📥 Download Offline Memorial HTML</button>
+                        <button id="btnDownloadHtml" class="btn btn-outline hidden">📥 Download Memorial HTML</button>
+                        <button id="btnDownloadDeathCert" class="btn btn-secondary hidden">📜 Download PDF Death Certificate</button>
                     </div>
                 </div>
             </section>
