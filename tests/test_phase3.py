@@ -180,7 +180,7 @@ def test_agent_already_passing_repo(tmp_path: Path):
     assert result.initial_summary.passed == 10
     assert result.initial_summary.failed == 0
     assert len(result.patches_applied) == 0
-    assert result.total_steps == 2  # Era detection + baseline test execution
+    assert result.total_steps == 3  # Era detection + strategy prep + baseline test execution
 
 
 def test_agent_successful_resurrection_loop(tmp_path: Path):

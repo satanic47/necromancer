@@ -49,6 +49,28 @@ class OfrendaGenerator:
         era_name = html.escape(result.era_profile.era_name)
         strategy = html.escape(result.strategy_used.value)
 
+        # Distinct Strategy Seals
+        if result.strategy_used.value == "PIN_THE_PAST":
+            strategy_badge = f"""
+            <div class="strategy-banner pin-past">
+                <span class="strategy-icon">🏺</span>
+                <div class="strategy-text">
+                    <strong>Resurrection Strategy: PIN THE PAST</strong>
+                    <small>Preserved historical vintage {result.era_profile.year} architecture frozen in time with legacy resolver pins and retro mirrors.</small>
+                </div>
+            </div>
+            """
+        else:
+            strategy_badge = f"""
+            <div class="strategy-banner port-present">
+                <span class="strategy-icon">⚡</span>
+                <div class="strategy-text">
+                    <strong>Resurrection Strategy: PORT TO PRESENT</strong>
+                    <small>Modernized codebase architecture to contemporary 2026 standards (PEP 621, collections.abc, Pytest).</small>
+                </div>
+            </div>
+            """
+
         first_date = (
             tombstone.first_commit_date.strftime("%B %Y")
             if tombstone.first_commit_date
@@ -215,6 +237,31 @@ class OfrendaGenerator:
             color: var(--muted-text);
             text-transform: uppercase;
         }}
+
+        /* Strategy Banner */
+        .strategy-banner {{
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }}
+        .strategy-banner.pin-past {{
+            background: rgba(255, 191, 0, 0.12);
+            border: 1px solid var(--cempasuchil);
+            box-shadow: 0 0 15px rgba(255, 191, 0, 0.2);
+        }}
+        .strategy-banner.pin-past strong {{ color: var(--cempasuchil); display: block; }}
+        .strategy-banner.port-present {{
+            background: rgba(46, 204, 113, 0.12);
+            border: 1px solid var(--success-jade);
+            box-shadow: 0 0 15px rgba(46, 204, 113, 0.2);
+        }}
+        .strategy-banner.port-present strong {{ color: var(--success-jade); display: block; }}
+        .strategy-icon {{ font-size: 1.8rem; }}
+        .strategy-text small {{ color: var(--muted-text); }}
 
         /* Audio Altar */
         .audio-altar {{
@@ -402,6 +449,9 @@ class OfrendaGenerator:
                 </div>
             </div>
         </header>
+
+        <!-- Strategy Badge -->
+        {strategy_badge}
 
         <!-- Audio Altar -->
         {audio_section}
