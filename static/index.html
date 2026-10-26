@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Necromancer | The Ghost in the Machine</title>
-    <link rel="stylesheet" href="/static/style.css?v=2.0.0">
+    <link rel="stylesheet" href="/static/style.css?v=2.1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💀</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,15 +15,31 @@
     <canvas id="mistCanvas"></canvas>
 
     <div class="app-wrapper">
-        <!-- Festive Papel Picado Bunting -->
-        <div class="papel-picado-banner">
-            <div class="flag orange"><span class="skull-cutout">💀</span></div>
-            <div class="flag purple"><span class="skull-cutout">🕯️</span></div>
-            <div class="flag gold"><span class="skull-cutout">🌼</span></div>
-            <div class="flag pink"><span class="skull-cutout">🦴</span></div>
-            <div class="flag green"><span class="skull-cutout">💀</span></div>
-            <div class="flag orange"><span class="skull-cutout">🔥</span></div>
-            <div class="flag purple"><span class="skull-cutout">🌼</span></div>
+        <!-- Festive Papel Picado Bunting Garlands -->
+        <div class="bunting-wrapper">
+            <!-- Row 1: Event Bunting -->
+            <div class="papel-picado-banner row-event">
+                <div class="flag orange"><span class="flag-icon">🎃</span><span class="flag-text">HACKTOBERFEST</span></div>
+                <div class="flag purple"><span class="flag-icon">💀</span><span class="flag-text">2026</span></div>
+                <div class="flag gold"><span class="flag-icon">⚡</span><span class="flag-text">BY</span></div>
+                <div class="flag pink"><span class="flag-icon">🏆</span><span class="flag-text">MLH</span></div>
+                <div class="flag green"><span class="flag-icon">🌼</span><span class="flag-text">&</span></div>
+                <div class="flag cyan"><span class="flag-icon">💻</span><span class="flag-text">DEV.TO</span></div>
+                <div class="flag crimson"><span class="flag-icon">🕯️</span><span class="flag-text">GHOST</span></div>
+                <div class="flag purple"><span class="flag-icon">⚙️</span><span class="flag-text">IN THE</span></div>
+                <div class="flag orange"><span class="flag-icon">🔮</span><span class="flag-text">MACHINE</span></div>
+            </div>
+
+            <!-- Row 2: Targeted Partners (Smaller Compact Cards) -->
+            <div class="papel-picado-banner row-partners">
+                <div class="flag flag-sm gold"><span class="flag-icon-sm">🎙️</span><span class="flag-text-sm">ElevenLabs Voice</span></div>
+                <div class="flag flag-sm purple"><span class="flag-icon-sm">🛡️</span><span class="flag-text-sm">Sentry Tracing</span></div>
+                <div class="flag flag-sm cyan"><span class="flag-icon-sm">☁️</span><span class="flag-text-sm">Render Cloud</span></div>
+                <div class="flag flag-sm orange"><span class="flag-icon-sm">🌐</span><span class="flag-text-sm">.tech Domains</span></div>
+                <div class="flag flag-sm green"><span class="flag-icon-sm">🍃</span><span class="flag-text-sm">MongoDB Atlas</span></div>
+                <div class="flag flag-sm pink"><span class="flag-icon-sm">🔒</span><span class="flag-text-sm">Auth0 Guard</span></div>
+                <div class="flag flag-sm crimson"><span class="flag-icon-sm">⚡</span><span class="flag-text-sm">Backboard Models</span></div>
+            </div>
         </div>
 
         <!-- Spooky Altar Header -->
@@ -206,6 +222,6 @@
         </div>
     </div>
 
-    <script src="/static/app.js?v=2.0.0"></script>
+    <script src="/static/app.js?v=2.1.0"></script>
 </body>
 </html>
