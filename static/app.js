@@ -198,7 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
             playBellToll();
             btnPlaySampleEulogy.disabled = true;
             btnPlaySampleEulogy.innerHTML = "<span>⏳ Summoning Ghost Audio...</span>";
-            logTerminal("Contacting ElevenLabs API for spoken eulogy honoring satanic47...", "system");
+            logTerminal("Contacting ElevenLabs API for spoken eulogy...", "system");
 
             try {
                 const res = await fetch("/api/eulogy/sample");
@@ -223,7 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 logTerminal(`ElevenLabs eulogy error: ${err.message}`, "error");
             } finally {
                 btnPlaySampleEulogy.disabled = false;
-                btnPlaySampleEulogy.innerHTML = "<span class='audio-btn-icon'>▶️</span><span>Hear ElevenLabs Ghost Eulogy (satanic47)</span>";
+                btnPlaySampleEulogy.innerHTML = "<span class='audio-btn-icon'>▶️</span><span>Hear ElevenLabs Spoken Eulogy Preview</span>";
             }
         });
     }
@@ -236,7 +236,7 @@ document.addEventListener("DOMContentLoaded", () => {
             playBellToll();
             repoInput.value = "https://github.com/satanic47/necromancer.git";
             logTerminal("✨ Guided Demo: Loaded vintage repository 'https://github.com/satanic47/necromancer.git'", "system");
-            logTerminal("Triggering automatic tombstone exhumation for creator satanic47...", "thought");
+            logTerminal("Triggering automatic tombstone exhumation to identify original git author...", "thought");
             btnExhume.click();
         });
     }
@@ -315,11 +315,11 @@ document.addEventListener("DOMContentLoaded", () => {
             
             const author = (data.top_contributors && data.top_contributors.length > 0)
                 ? data.top_contributors[0].name
-                : "satanic47";
+                : "Open Source Contributor";
             document.getElementById("tsAuthor").textContent = author;
             tombstoneCard.classList.remove("hidden");
 
-            logTerminal(`Exhumation complete. Found ${data.total_commits} commits dormant for ${data.dormant_years.toFixed(1)} years. Lead Creator: ${author}.`, "success");
+            logTerminal(`Exhumation complete. Found ${data.total_commits} commits. Lead Creator: ${author}.`, "success");
         } catch (err) {
             logTerminal(`Exhumation error: ${err.message}`, "error");
         }
@@ -393,10 +393,12 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!res.ok) throw new Error(await res.text());
             const data = await res.json();
             
-            data.steps.forEach(s => {
-                logTerminal(`[Step ${s.step_number} - ${s.action}] ${s.thought}`, "thought");
-                if (s.observation) logTerminal(`  <- ${s.observation}`, "normal");
-            });
+            if (data.steps && Array.isArray(data.steps)) {
+                data.steps.forEach(s => {
+                    logTerminal(`[Step ${s.step_number} - ${s.action}] ${s.thought}`, "thought");
+                    if (s.observation) logTerminal(`  <- ${s.observation}`, "normal");
+                });
+            }
 
             if (data.success) {
                 playBellToll();

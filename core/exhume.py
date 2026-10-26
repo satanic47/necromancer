@@ -181,8 +181,21 @@ def exhume_repository(repo_path_str: str) -> ExhumeMetadata:
         contributors_map.values(), key=lambda c: c.commit_count, reverse=True
     )
 
+    clean_repo_name = repo_path.name
+    try:
+        if hasattr(repo, "remotes") and repo.remotes:
+            origin_url = repo.remotes.origin.url
+            url_path = origin_url.rstrip("/")
+            if url_path.endswith(".git"):
+                url_path = url_path[:-4]
+            extracted = url_path.split("/")[-1].split(":")[-1]
+            if extracted:
+                clean_repo_name = extracted
+    except Exception:
+        pass
+
     return ExhumeMetadata(
-        repo_name=repo_path.name,
+        repo_name=clean_repo_name,
         repo_path=str(repo_path),
         primary_language=language,
         detected_files=matched_files,

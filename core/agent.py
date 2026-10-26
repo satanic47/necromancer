@@ -75,6 +75,18 @@ class ResurrectionResult:
             "initial_summary": self.initial_summary.to_dict(),
             "final_summary": self.final_summary.to_dict(),
             "total_steps": self.total_steps,
+            "steps": [
+                {
+                    "step_number": s.step_number,
+                    "action": s.action,
+                    "thought": s.thought,
+                    "tool_call": s.tool_call,
+                    "observation": s.observation,
+                    "timestamp": s.timestamp,
+                    "duration_seconds": s.duration_seconds,
+                }
+                for s in self.steps
+            ],
             "patches_applied": self.patches_applied,
             "total_duration_seconds": self.total_duration_seconds,
             "error_message": self.error_message,

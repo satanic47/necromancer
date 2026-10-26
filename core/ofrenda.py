@@ -36,9 +36,11 @@ class OfrendaGenerator:
     ) -> str:
         """Constructs an offline, dependency-free HTML document."""
         repo_name = html.escape(tombstone.repo_name)
-        raw_author = tombstone.top_contributors[0].name if tombstone.top_contributors else "satanic47"
-        if raw_author.lower() in ("shivysid", "unknown", ""):
-            raw_author = "satanic47"
+        raw_author = (
+            tombstone.top_contributors[0].name
+            if tombstone.top_contributors and tombstone.top_contributors[0].name.strip()
+            else "Open Source Contributor"
+        )
         author_name = html.escape(raw_author)
         years_dormant = f"{tombstone.dormant_years:.1f}"
         commits = tombstone.total_commits
@@ -75,9 +77,16 @@ class OfrendaGenerator:
         contributors = tombstone.top_contributors[:5]
         if not contributors:
             from core.exhume import ContributorInfo
-            contributors = [ContributorInfo(name="satanic47", email="satanic47@users.noreply.github.com", commit_count=commits or 47, last_active=datetime.now())]
+            contributors = [
+                ContributorInfo(
+                    name="Open Source Contributor",
+                    email="contributor@archive.org",
+                    commit_count=commits or 1,
+                    last_active=datetime.now(),
+                )
+            ]
         for c in contributors:
-            c_name = "satanic47" if c.name.lower() in ("shivysid", "unknown", "") else c.name
+            c_name = c.name if c.name.strip() else "Open Source Contributor"
             contrib_items += f"""
             <div class="contributor-card">
                 <div class="skull-badge">💀</div>

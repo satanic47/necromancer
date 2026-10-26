@@ -42,15 +42,11 @@ class EulogyEngine:
     @classmethod
     def compose_text(cls, tombstone: RepositoryTombstone) -> str:
         """Composes a poetic tribute to the creators of the dormant repository."""
-        primary_author = "satanic47"
-        if tombstone.top_contributors:
-            author_candidate = tombstone.top_contributors[0].name
-            if author_candidate.lower() in ("shivysid", "unknown", ""):
-                primary_author = "satanic47"
-            else:
-                primary_author = author_candidate
+        primary_author = "an unknown craftsperson"
+        if tombstone.top_contributors and tombstone.top_contributors[0].name.strip():
+            primary_author = tombstone.top_contributors[0].name.strip()
 
-        years_str = f"{tombstone.dormant_years:.1f}" if tombstone.dormant_years > 0 else "8.5"
+        years_str = f"{tombstone.dormant_years:.1f}" if tombstone.dormant_years > 0 else "many"
         commits_str = f"{tombstone.total_commits}"
 
         return (
