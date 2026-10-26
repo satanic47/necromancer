@@ -83,7 +83,7 @@ class EulogyEngine:
         }
         payload = {
             "text": text,
-            "model_id": "eleven_monolingual_v1",
+            "model_id": "eleven_multilingual_v2",
             "voice_settings": {
                 "stability": 0.65,
                 "similarity_boost": 0.85,
@@ -100,7 +100,13 @@ class EulogyEngine:
                     res = http_client.post(url, headers=headers, json=payload)
                     res.raise_for_status()
                     return EulogyAudio(text=text, audio_bytes=res.content)
-        except Exception:
+        except Exception as err:
+            logger.error("ElevenLabs TTS generation failed: %s", err)
+            try:
+                import sentry_sdk
+                sentry_sdk.capture_exception(err)
+            except Exception:
+                pass
             # Graceful fallback to synthetic audio frame on network failure
             fallback_bytes = b"\xff\xfb\x90\x44\x00\x00\x00\x00\x00\x00\x00\x00" * 16
             return EulogyAudio(text=text, audio_bytes=fallback_bytes)
