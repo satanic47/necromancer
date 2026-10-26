@@ -161,7 +161,7 @@ class ResurrectionAgent:
         self._init_sentry(sentry_dsn or os.getenv("SENTRY_DSN"))
 
     def _init_sentry(self, dsn: Optional[str]):
-        if dsn and not sentry_sdk.is_initialized():
+        if dsn and not sentry_sdk.is_initialized() and os.getenv("TESTING", "0") != "1":
             try:
                 sentry_sdk.init(
                     dsn=dsn,

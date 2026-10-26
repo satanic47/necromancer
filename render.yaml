@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: necromancer
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: SENTRY_DSN
+        value: https://4dbe6b641de84a2c5dab850e0bc9e311@o4512324247683072.ingest.de.sentry.io/4512324315250768
+      - key: SENTRY_ORG
+        value: shivysid-infotech
+      - key: ELEVENLABS_VOICE_ID
+        value: 21m00Tcm4TlvDq8ikWAM
+      - key: ELEVENLABS_API_KEY
+        sync: false
+      - key: DOMAIN
+        value: necromancer.shivysidinfo.tech
+      - key: BASE_PATH
+        value: ""

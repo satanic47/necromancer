@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Necromancer | The Ghost in the Machine</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💀</text></svg>">
+</head>
+<body>
+    <div class="app-wrapper">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="brand">
+                <span class="brand-icon">💀</span>
+                <div class="brand-text">
+                    <h1>NECROMANCER</h1>
+                    <span class="tagline">The Ghost in the Machine • Resurrecting Dead Open Source</span>
+                </div>
+            </div>
+            <div class="header-status">
+                <span class="status-indicator online"></span>
+                <span class="status-text">Docker Sandbox Ready</span>
+                <span class="partner-badge elevenlabs">ElevenLabs</span>
+                <span class="partner-badge sentry">Sentry</span>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-layout">
+            <!-- Left Panel: Exhumation Altar -->
+            <section class="altar-panel">
+                <div class="panel-card">
+                    <h2 class="card-title">🕯️ Exhumation Altar</h2>
+                    <p class="card-desc">Enter a dead repository path or GitHub URL to resurrect.</p>
+                    
+                    <form id="exhumeForm" class="exhume-form">
+                        <div class="input-group">
+                            <label for="repoInput">Repository Path or Git URL</label>
+                            <input type="text" id="repoInput" placeholder="e.g. https://github.com/user/dormant-lib" required value=".">
+                        </div>
+                        
+                        <div class="strategy-selector">
+                            <label>Resurrection Strategy</label>
+                            <div class="radio-cards">
+                                <label class="radio-card">
+                                    <input type="radio" name="strategy" value="AUTO" checked>
+                                    <span class="radio-content">
+                                        <strong>Auto-Detect</strong>
+                                        <small>Era heuristics</small>
+                                    </span>
+                                </label>
+                                <label class="radio-card">
+                                    <input type="radio" name="strategy" value="PIN_THE_PAST">
+                                    <span class="radio-content">
+                                        <strong>Pin the Past</strong>
+                                        <small>Retro mirrors & flags</small>
+                                    </span>
+                                </label>
+                                <label class="radio-card">
+                                    <input type="radio" name="strategy" value="PORT_TO_PRESENT">
+                                    <span class="radio-content">
+                                        <strong>Port to Present</strong>
+                                        <small>Syntax modernization</small>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="button-row">
+                            <button type="button" id="btnExhume" class="btn btn-secondary">1. Exhume Tombstone</button>
+                            <button type="submit" id="btnResurrect" class="btn btn-primary">2. Begin Séance</button>
+                        </div>
+                    </form>
+
+                    <!-- Tombstone Preview -->
+                    <div id="tombstoneCard" class="tombstone-preview hidden">
+                        <div class="tombstone-header">
+                            <h3 id="tsName">Repository Name</h3>
+                            <span id="tsLang" class="lang-tag">Python</span>
+                        </div>
+                        <div class="tombstone-grid">
+                            <div><strong id="tsDormant">0.0</strong><small>Years Dormant</small></div>
+                            <div><strong id="tsCommits">0</strong><small>Total Commits</small></div>
+                            <div><strong id="tsAuthor">Unknown</strong><small>Lead Author</small></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Time-Machine Slider -->
+                <div class="panel-card time-machine-card">
+                    <h2 class="card-title">⏳ Time-Machine Slider</h2>
+                    <p class="card-desc">Simulate dependency resolution across historical epochs.</p>
+                    <div class="slider-wrapper">
+                        <input type="range" min="2008" max="2026" value="2026" id="timeMachineSlider" class="range-slider">
+                        <div class="slider-labels">
+                            <span>2008 (Py2.7)</span>
+                            <span>2015 (Py3.5)</span>
+                            <span>2020 (Py3.8)</span>
+                            <span>2026 (Modern)</span>
+                        </div>
+                    </div>
+                    <div id="sliderOutput" class="slider-output">
+                        <strong>Year 2026 (Modern):</strong> Contemporary packaging (PEP 621, pyproject.toml) & pytest runner.
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Panel: Live Séance Console -->
+            <section class="console-panel">
+                <div class="console-card">
+                    <div class="console-header">
+                        <div class="console-tabs">
+                            <span class="tab active">🔮 Live Séance Console</span>
+                        </div>
+                        <div class="console-vitals">
+                            <span id="vitalTimer">⏱️ 0.0s</span>
+                            <span id="vitalSteps">🪜 Step 0</span>
+                        </div>
+                    </div>
+                    
+                    <div id="consoleTerminal" class="console-terminal">
+                        <div class="terminal-line system">=== Necromancer Séance Console Initialized ===</div>
+                        <div class="terminal-line muted">Awaiting exhumation instruction...</div>
+                    </div>
+
+                    <div class="console-actions">
+                        <button id="btnViewOfrenda" class="btn btn-marigold hidden">🌼 View Memorial Ofrenda</button>
+                        <button id="btnDownloadHtml" class="btn btn-outline hidden">📥 Download Standalone HTML</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal for Ofrenda View -->
+    <div id="ofrendaModal" class="modal-backdrop hidden">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h2>🌼 Memorial Ofrenda</h2>
+                <button id="btnCloseModal" class="btn-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <iframe id="ofrendaFrame" src="about:blank"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
