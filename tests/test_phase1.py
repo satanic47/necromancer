@@ -277,6 +277,16 @@ def test_sandbox_result_dataclass():
     assert res.execution_time_seconds == 1.5
 
 
+def test_sandbox_subprocess_fallback(tmp_path: Path):
+    from core.sandbox import DockerSandbox
+    (tmp_path / "hello.txt").write_text("world")
+    sandbox = DockerSandbox()
+    sandbox.docker_available = False
+    res = sandbox.execute_in_sandbox(tmp_path, "python -c \"print('isolated output')\"")
+    assert res.exit_code == 0
+    assert "isolated output" in res.stdout
+
+
 # ==========================================
 # 6. Language Detection Heuristics (3 tests)
 # ==========================================

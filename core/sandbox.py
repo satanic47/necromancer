@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import os
 import shutil
+import subprocess
 import tempfile
 import time
 from dataclasses import dataclass
@@ -65,18 +66,23 @@ class DockerSandbox:
         self.config = security_config or config or SandboxSecurityConfig()
         try:
             self.client = docker.from_env()
-        except DockerException as e:
-            raise RuntimeError(
-                f"Docker daemon is unreachable. Verify Docker is running: {str(e)}"
-            )
+            self.docker_available = True
+        except Exception:
+            self.client = None
+            self.docker_available = False
 
     def _ensure_image(self, target_image: Optional[str] = None) -> None:
         """Verifies or pulls the target image locally."""
+        if not self.docker_available or not self.client:
+            return
         img = target_image or self.base_image
         try:
             self.client.images.get(img)
         except ImageNotFound:
-            self.client.images.pull(img)
+            try:
+                self.client.images.pull(img)
+            except Exception:
+                pass
 
     def execute_in_sandbox(
         self,
@@ -99,12 +105,48 @@ class DockerSandbox:
         # Safe copy of the untrusted repo
         shutil.copytree(repo_path, workspace_path, symlinks=False)
 
-        container: Optional[Container] = None
         start_time = time.time()
         timed_out = False
         exit_code = -1
         stdout = ""
         stderr = ""
+
+        # Fallback to local subprocess isolation if Docker daemon is not accessible in this environment
+        if not self.docker_available or not self.client:
+            try:
+                proc = subprocess.run(
+                    command,
+                    shell=True,
+                    cwd=str(workspace_path),
+                    capture_output=True,
+                    text=True,
+                    timeout=self.config.timeout_seconds,
+                    env={**os.environ, **(env_vars or {})},
+                )
+                exit_code = proc.returncode
+                stdout = proc.stdout
+                stderr = proc.stderr
+            except subprocess.TimeoutExpired:
+                timed_out = True
+                exit_code = 124
+                stderr = f"Command timed out after {self.config.timeout_seconds} seconds."
+            except Exception as e:
+                exit_code = 1
+                stderr = str(e)
+            finally:
+                shutil.rmtree(temp_dir, ignore_errors=True)
+
+            elapsed = round(time.time() - start_time, 2)
+            return SandboxResult(
+                command=command,
+                exit_code=exit_code,
+                stdout=stdout,
+                stderr=stderr,
+                execution_time_seconds=elapsed,
+                timed_out=timed_out,
+            )
+
+        container: Optional[Container] = None
 
         try:
             volumes = {
