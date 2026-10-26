@@ -247,3 +247,56 @@ def test_api_ofrenda_endpoint_generation(monkeypatch):
     assert "html" in data
     assert "<!DOCTYPE html>" in data["html"]
     assert "eulogy_text" in data
+
+
+def test_sentry_debug_trigger():
+    from app.main import trigger_sentry_error
+    with pytest.raises(ZeroDivisionError):
+        asyncio.run(trigger_sentry_error())
+
+
+def test_path_traversal_attack_protection():
+    req = ExhumeRequest(repo_path="../../../etc/passwd")
+    with pytest.raises(HTTPException) as exc_info:
+        asyncio.run(exhume_repo_endpoint(req))
+    assert exc_info.value.status_code == 400
+    assert "Path traversal" in exc_info.value.detail or "Security violation" in exc_info.value.detail
+
+
+def test_graveyard_database_record_and_list(tmp_path: Path):
+    from core.graveyard_db import GraveyardDatabase
+    db = GraveyardDatabase(mongo_uri=None)
+    tombstone = RepositoryTombstone(
+        repo_name="retro-pkg",
+        repo_path=str(tmp_path),
+        primary_language="python",
+        total_commits=15,
+        dormant_years=5.0,
+        top_contributors=[ContributorInfo(name="Dev", email="d@d.com", commit_count=15, last_active=datetime.now())],
+    )
+    res = ResurrectionResult(
+        repo_name="retro-pkg",
+        success=True,
+        strategy_used=ResurrectionStrategy.PORT_TO_PRESENT,
+        era_profile=EraProfile(year=2018, era_name="Py36", language="python", recommended_runtime_version="3.6", docker_base_image="python:3.6"),
+        initial_summary=ParsedSummary(runner="pytest", total_run=1, passed=0, failed=1),
+        final_summary=ParsedSummary(runner="pytest", total_run=1, passed=1, failed=0),
+        total_steps=2,
+        steps=[],
+        patches_applied=[],
+        total_duration_seconds=1.2,
+    )
+    entry = db.record_ofrenda(tombstone, res, eulogy_text="Honored.")
+    assert entry["repo_name"] == "retro-pkg"
+    assert entry["success"] is True
+
+    fame = db.list_hall_of_fame(limit=5)
+    assert len(fame) >= 1
+    assert fame[-1]["repo_name"] == "retro-pkg"
+
+
+def test_hall_of_fame_endpoint():
+    from app.main import hall_of_fame_endpoint
+    data = asyncio.run(hall_of_fame_endpoint())
+    assert "archive" in data
+    assert isinstance(data["archive"], list)
