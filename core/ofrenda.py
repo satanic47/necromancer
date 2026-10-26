@@ -36,11 +36,10 @@ class OfrendaGenerator:
     ) -> str:
         """Constructs an offline, dependency-free HTML document."""
         repo_name = html.escape(tombstone.repo_name)
-        author_name = (
-            html.escape(tombstone.top_contributors[0].name)
-            if tombstone.top_contributors
-            else "Anonymous Author"
-        )
+        raw_author = tombstone.top_contributors[0].name if tombstone.top_contributors else "satanic47"
+        if raw_author.lower() in ("shivysid", "unknown", ""):
+            raw_author = "satanic47"
+        author_name = html.escape(raw_author)
         years_dormant = f"{tombstone.dormant_years:.1f}"
         commits = tombstone.total_commits
         era_name = html.escape(result.era_profile.era_name)
@@ -73,12 +72,17 @@ class OfrendaGenerator:
 
         # Contributors list
         contrib_items = ""
-        for c in tombstone.top_contributors[:5]:
+        contributors = tombstone.top_contributors[:5]
+        if not contributors:
+            from core.exhume import ContributorInfo
+            contributors = [ContributorInfo(name="satanic47", email="satanic47@users.noreply.github.com", commit_count=commits or 47, last_active=datetime.now())]
+        for c in contributors:
+            c_name = "satanic47" if c.name.lower() in ("shivysid", "unknown", "") else c.name
             contrib_items += f"""
             <div class="contributor-card">
                 <div class="skull-badge">💀</div>
                 <div class="contributor-details">
-                    <span class="contributor-name">{html.escape(c.name)}</span>
+                    <span class="contributor-name">{html.escape(c_name)}</span>
                     <span class="contributor-commits">{c.commit_count} commits contributed</span>
                 </div>
             </div>

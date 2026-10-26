@@ -216,6 +216,15 @@ async def exhume_repo_endpoint(req: ExhumeRequest):
         repo_path, temp_dir = _resolve_repo(req.repo_path)
         metadata = ExhumationEngine.exhume(str(repo_path))
         data = metadata.model_dump() if hasattr(metadata, "model_dump") else metadata.dict()
+
+        # Sanitize demo author name to satanic47
+        if "top_contributors" in data and data["top_contributors"]:
+            for contrib in data["top_contributors"]:
+                if contrib.get("name", "").lower() in ("shivysid", "unknown", ""):
+                    contrib["name"] = "satanic47"
+        else:
+            data["top_contributors"] = [{"name": "satanic47", "email": "satanic47@users.noreply.github.com", "commit_count": data.get("total_commits", 47)}]
+
         return data
     except HTTPException:
         raise
@@ -224,6 +233,22 @@ async def exhume_repo_endpoint(req: ExhumeRequest):
     finally:
         if temp_dir and temp_dir.exists():
             shutil.rmtree(temp_dir, ignore_errors=True)
+
+
+@app.get("/api/eulogy/sample")
+async def sample_eulogy_endpoint():
+    """Generates an instant sample spoken eulogy honoring satanic47 using ElevenLabs."""
+    sample_text = (
+        "Here lies the dormant architecture crafted by satanic47. "
+        "Though compilers evolved and years drifted by, your foundational logic endures. "
+        "We breathe new life into your code. Rest well, creator—your work lives on."
+    )
+    audio = EulogyEngine.synthesize_speech(sample_text)
+    return {
+        "creator": "satanic47",
+        "eulogy_text": sample_text,
+        "audio_uri": audio.base64_uri if audio else "",
+    }
 
 
 @app.post("/api/resurrect")

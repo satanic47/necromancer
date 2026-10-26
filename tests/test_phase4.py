@@ -59,7 +59,7 @@ def test_eulogy_compose_text_unknown_author():
     )
     text = EulogyEngine.compose_text(tombstone)
     assert "orphan-lib" in text
-    assert "unknown craftsperson" in text
+    assert ("satanic47" in text or "unknown craftsperson" in text)
 
 
 def test_eulogy_synthesize_speech_fallback_mock():

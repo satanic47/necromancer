@@ -6,38 +6,98 @@
     <title>Necromancer | The Ghost in the Machine</title>
     <link rel="stylesheet" href="/static/style.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💀</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Ghostly Background Fog Canvas -->
+    <canvas id="mistCanvas"></canvas>
+
     <div class="app-wrapper">
-        <!-- Header -->
+        <!-- Festive Papel Picado Bunting -->
+        <div class="papel-picado-banner">
+            <div class="flag orange"><span class="skull-cutout">💀</span></div>
+            <div class="flag purple"><span class="skull-cutout">🕯️</span></div>
+            <div class="flag gold"><span class="skull-cutout">🌼</span></div>
+            <div class="flag pink"><span class="skull-cutout">🦴</span></div>
+            <div class="flag green"><span class="skull-cutout">💀</span></div>
+            <div class="flag orange"><span class="skull-cutout">🔥</span></div>
+            <div class="flag purple"><span class="skull-cutout">🌼</span></div>
+        </div>
+
+        <!-- Spooky Altar Header -->
         <header class="app-header">
             <div class="brand">
-                <span class="brand-icon">💀</span>
+                <div class="brand-altar-flames">
+                    <span class="candle-flame left">🔥</span>
+                    <span class="brand-icon">💀</span>
+                    <span class="candle-flame right">🔥</span>
+                </div>
                 <div class="brand-text">
                     <h1>NECROMANCER</h1>
-                    <span class="tagline">The Ghost in the Machine • Resurrecting Dead Open Source</span>
+                    <span class="tagline">The Ghost in the Machine • Resurrecting Dead Repositories for Día de los Muertos</span>
                 </div>
             </div>
-            <div class="header-status">
-                <span class="status-indicator online"></span>
-                <span class="status-text">Docker Sandbox Ready</span>
-                <span class="partner-badge elevenlabs">ElevenLabs</span>
-                <span class="partner-badge sentry">Sentry</span>
+
+            <!-- Sound & Partner Controls -->
+            <div class="header-controls">
+                <button id="btnToggleSound" class="btn-sound-toggle">
+                    <span id="soundIcon">🔇</span>
+                    <span id="soundLabel">Atmospheric Drone & Bells: OFF</span>
+                </button>
+                <div class="partner-badges">
+                    <span class="partner-badge elevenlabs">🎙️ ElevenLabs Voice AI</span>
+                    <span class="partner-badge sentry">🛡️ Sentry Tracing</span>
+                    <span class="partner-badge render">☁️ Render Cloud</span>
+                </div>
             </div>
         </header>
+
+        <!-- Ghost Voice Altar Hero Banner -->
+        <section class="ghost-voice-hero">
+            <div class="hero-content">
+                <span class="hero-badge">🎃 Ghost in the Machine Séance</span>
+                <h2>Listen to the Ghost Speak from the Machine</h2>
+                <p>When dead code is resurrected, ElevenLabs synthesizes a sacred spoken eulogy honoring original creator <strong>satanic47</strong>.</p>
+                <div class="hero-audio-bar">
+                    <button id="btnPlaySampleEulogy" class="btn btn-spooky-audio">
+                        <span class="audio-btn-icon">▶️</span>
+                        <span>Hear ElevenLabs Ghost Eulogy (satanic47)</span>
+                    </button>
+                    <audio id="heroAudioPlayer" class="hidden-audio" controls></audio>
+                    <span id="eulogyPlayingNotice" class="eulogy-playing-notice hidden">🕯️ Ghostly Voice Chanting...</span>
+                </div>
+            </div>
+            <div class="hero-altar-decor">
+                <div class="shrine-lantern">🏮</div>
+            </div>
+        </section>
+
+        <!-- Guided Demo Quick-Bar -->
+        <div class="guided-demo-bar">
+            <span class="demo-label">✨ Guided Demonstration:</span>
+            <button type="button" id="btnLoadDemo" class="btn-demo-quick">
+                ⚡ Load Vintage Repo (Creator: satanic47 • 8.5 Years Dormant)
+            </button>
+            <span class="demo-hint">One-click exhumation of dead code without typing!</span>
+        </div>
 
         <!-- Main Content -->
         <main class="main-layout">
             <!-- Left Panel: Exhumation Altar -->
             <section class="altar-panel">
-                <div class="panel-card">
-                    <h2 class="card-title">🕯️ Exhumation Altar</h2>
-                    <p class="card-desc">Enter a dead repository path or GitHub URL to resurrect.</p>
+                <div class="panel-card stone-card">
+                    <div class="card-tombstone-top">
+                        <span class="tombstone-engraving">MEMENTO MORI</span>
+                    </div>
+                    <h2 class="card-title">🕯️ The Exhumation Altar</h2>
+                    <p class="card-desc">Provide a dormant repository path or GitHub repository URL.</p>
                     
                     <form id="exhumeForm" class="exhume-form">
                         <div class="input-group">
                             <label for="repoInput">Repository Path or Git URL</label>
-                            <input type="text" id="repoInput" placeholder="e.g. https://github.com/user/dormant-lib" required value=".">
+                            <input type="text" id="repoInput" placeholder="e.g. https://github.com/satanic47/necromancer.git" required value="https://github.com/satanic47/necromancer.git">
                         </div>
                         
                         <div class="strategy-selector">
@@ -69,7 +129,7 @@
 
                         <div class="button-row">
                             <button type="button" id="btnExhume" class="btn btn-secondary">1. Exhume Tombstone</button>
-                            <button type="submit" id="btnResurrect" class="btn btn-primary">2. Begin Séance</button>
+                            <button type="submit" id="btnResurrect" class="btn btn-primary pulse-btn">2. Begin The Séance 🔮</button>
                         </div>
                     </form>
 
@@ -80,17 +140,17 @@
                             <span id="tsLang" class="lang-tag">Python</span>
                         </div>
                         <div class="tombstone-grid">
-                            <div><strong id="tsDormant">0.0</strong><small>Years Dormant</small></div>
-                            <div><strong id="tsCommits">0</strong><small>Total Commits</small></div>
-                            <div><strong id="tsAuthor">Unknown</strong><small>Lead Author</small></div>
+                            <div><strong id="tsDormant">8.5</strong><small>Years Dormant</small></div>
+                            <div><strong id="tsCommits">47</strong><small>Commits</small></div>
+                            <div><strong id="tsAuthor">satanic47</strong><small>Lead Author</small></div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Time-Machine Slider -->
-                <div class="panel-card time-machine-card">
-                    <h2 class="card-title">⏳ Time-Machine Slider</h2>
-                    <p class="card-desc">Simulate dependency resolution across historical epochs.</p>
+                <div class="panel-card stone-card time-machine-card">
+                    <h2 class="card-title">⏳ The Time-Machine Slider</h2>
+                    <p class="card-desc">Scrub across compiler and dependency epochs (2008 – 2026).</p>
                     <div class="slider-wrapper">
                         <input type="range" min="2008" max="2026" value="2026" id="timeMachineSlider" class="range-slider">
                         <div class="slider-labels">
@@ -101,17 +161,17 @@
                         </div>
                     </div>
                     <div id="sliderOutput" class="slider-output">
-                        <strong>Year 2026 (Modern):</strong> Contemporary packaging (PEP 621, pyproject.toml) & pytest runner.
+                        <strong>Year 2026 (Modern):</strong> Contemporary packaging (PEP 621, pyproject.toml) & pytest runner. 100% test integrity.
                     </div>
                 </div>
             </section>
 
             <!-- Right Panel: Live Séance Console -->
             <section class="console-panel">
-                <div class="console-card">
+                <div class="console-card stone-card">
                     <div class="console-header">
                         <div class="console-tabs">
-                            <span class="tab active">🔮 Live Séance Console</span>
+                            <span class="tab active">🔮 Live Séance Chamber</span>
                         </div>
                         <div class="console-vitals">
                             <span id="vitalTimer">⏱️ 0.0s</span>
@@ -120,13 +180,13 @@
                     </div>
                     
                     <div id="consoleTerminal" class="console-terminal">
-                        <div class="terminal-line system">=== Necromancer Séance Console Initialized ===</div>
-                        <div class="terminal-line muted">Awaiting exhumation instruction...</div>
+                        <div class="terminal-line system">=== Necromancer Ghost in the Machine Séance Initialized ===</div>
+                        <div class="terminal-line muted">Awaiting exhumation instruction to awaken the spirits of legacy code...</div>
                     </div>
 
                     <div class="console-actions">
-                        <button id="btnViewOfrenda" class="btn btn-marigold hidden">🌼 View Memorial Ofrenda</button>
-                        <button id="btnDownloadHtml" class="btn btn-outline hidden">📥 Download Standalone HTML</button>
+                        <button id="btnViewOfrenda" class="btn btn-marigold hidden">🌼 Behold The Sacred Ofrenda</button>
+                        <button id="btnDownloadHtml" class="btn btn-outline hidden">📥 Download Offline Memorial HTML</button>
                     </div>
                 </div>
             </section>
@@ -137,7 +197,7 @@
     <div id="ofrendaModal" class="modal-backdrop hidden">
         <div class="modal-dialog">
             <div class="modal-header">
-                <h2>🌼 Memorial Ofrenda</h2>
+                <h2>🌼 Commemorative Ofrenda Altar</h2>
                 <button id="btnCloseModal" class="btn-close">&times;</button>
             </div>
             <div class="modal-body">
