@@ -20,7 +20,7 @@ import httpx
 from core.exhume import RepositoryTombstone
 
 
-DEFAULT_VOICE_ID = "pNInz6obpgDQGcFmaJgB"  # "Adam" - deep, ominous, spooky male voice
+DEFAULT_VOICE_ID = "vfaqCOvlrKi4Zp7C2IAm"  # "Malyx" - Echoey, Menacing and Deep Demon Monster
 
 
 @dataclass
@@ -54,11 +54,12 @@ class EulogyEngine:
         commits_str = f"{tombstone.total_commits}"
 
         return (
-            f"Here lies {tombstone.repo_name}, a repository lovingly crafted by {primary_author} "
-            f"and contributors, resting in dormancy for over {years_str} years across {commits_str} commits. "
-            f"In the spirit of the Día de los Muertos Ofrenda, we celebrate the foundation you built. "
-            f"Though frameworks faded and compilers changed, your architecture endures. "
-            f"We honor your code, breathing new light into your legacy. Rest well, creator—your work lives on."
+            f"... Hear the whispers of the grave ... Here lies {tombstone.repo_name}, "
+            f"crafted in the shadows by {primary_author} ... "
+            f"Dormant in the cold catacombs for over {years_str} years across {commits_str} commits ... "
+            f"In the spirit of the Día de los Muertos Ofrenda, we awaken your ghost from the machine ... "
+            f"Frameworks crumbled and compilers died, but your logic shall never perish ... "
+            f"Rise, creator ... Your work lives forever in the void."
         )
 
     @classmethod
@@ -89,8 +90,9 @@ class EulogyEngine:
             "text": text,
             "model_id": "eleven_multilingual_v2",
             "voice_settings": {
-                "stability": 0.40,
-                "similarity_boost": 0.85,
+                "stability": 0.22,
+                "similarity_boost": 0.95,
+                "style": 0.45,
             },
         }
 

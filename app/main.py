@@ -240,9 +240,9 @@ async def sample_eulogy_endpoint(creator: Optional[str] = None):
     """Generates an instant sample spoken eulogy using ElevenLabs in a deep ominous voice."""
     author_name = creator or "satanic47"
     sample_text = (
-        f"Here lies the dormant architecture crafted by {author_name}. "
-        "Though compilers evolved and years drifted through the void, your foundational logic endures. "
-        "We awaken your spirits and breathe new life into your repository. Rest well, creator—your work lives on forever in the machine."
+        f"... Hear the whispers of the grave ... Here lies the dormant architecture crafted by {author_name} ... "
+        f"Years drifted through the cold void, but your foundational logic endures ... "
+        f"We awaken your ghost from the machine ... Rest well, creator ... your code shall never die."
     )
     audio = EulogyEngine.synthesize_speech(sample_text)
     return {
