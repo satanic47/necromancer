@@ -1714,3 +1714,72 @@ body:not(.halloween-off) .footer-partner-tag:hover {
 body:not(.halloween-off) .footer-meta {
     color: #64748b;
 }
+
+
+/* ==========================================================================
+   Tombstone Partner Badges: Prior Labs TabPFN-3.5 & Auth0 Agent Guard
+   ========================================================================== */
+.tombstone-partners-meta {
+    margin-top: 0.85rem;
+    padding-top: 0.75rem;
+    border-top: 1px dashed rgba(255, 117, 24, 0.25);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.partner-meta-pill {
+    flex: 1;
+    min-width: 135px;
+    font-size: 0.8rem;
+    padding: 6px 10px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.partner-meta-pill span {
+    color: var(--text-muted, #8e95a5);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.partner-meta-pill strong {
+    color: var(--cempasuchil, #ffbf00);
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
+.partner-meta-pill.tabpfn-pill strong {
+    color: #00ff88;
+}
+
+.partner-meta-pill.auth0-pill strong {
+    color: #9b51e0;
+}
+
+body:not(.halloween-off) .tombstone-partners-meta {
+    border-top: 1px dashed rgba(0, 0, 0, 0.12);
+}
+
+body:not(.halloween-off) .partner-meta-pill {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+body:not(.halloween-off) .partner-meta-pill span {
+    color: #64748b;
+}
+
+body:not(.halloween-off) .partner-meta-pill.tabpfn-pill strong {
+    color: #059669;
+}
+
+body:not(.halloween-off) .partner-meta-pill.auth0-pill strong {
+    color: #7c3aed;
+}

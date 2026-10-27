@@ -20,6 +20,9 @@ from core.repo_map import (
     RepoMap,
     RepoMapper,
 )
+from core.resurrectability import TabPFNResurrectabilityEngine, ResurrectabilityReport
+from core.auth0_agent import Auth0AgentGuard, RiskyActionRequest, ActionApprovalResult
+from core.serp_crawler import SerpApiMigrationCrawler, MigrationGuidance
 
 __version__ = "0.2.0"
 
@@ -44,4 +47,11 @@ __all__ = [
     "ModuleBlueprint",
     "RepoMap",
     "RepoMapper",
+    "TabPFNResurrectabilityEngine",
+    "ResurrectabilityReport",
+    "Auth0AgentGuard",
+    "RiskyActionRequest",
+    "ActionApprovalResult",
+    "SerpApiMigrationCrawler",
+    "MigrationGuidance",
 ]

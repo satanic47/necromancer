@@ -617,9 +617,23 @@ document.addEventListener("DOMContentLoaded", () => {
                 author = "satanic47";
             }
             document.getElementById("tsAuthor").textContent = author;
+
+            // Prior Labs TabPFN-3.5 Resurrectability Scoring
+            if (data.resurrectability) {
+                const tsScoreEl = document.getElementById("tsTabpfnScore");
+                if (tsScoreEl) tsScoreEl.textContent = `${data.resurrectability.score}% (${data.resurrectability.predicted_strategy})`;
+            }
+
             tombstoneCard.classList.remove("hidden");
 
             showToast(`Exhumation complete: ${data.total_commits} commits found`, "success");
+            if (data.resurrectability) {
+                logTerminal(`📊 Prior Labs TabPFN-3.5: Predicted Resurrectability Score: ${data.resurrectability.score}% [Strategy: ${data.resurrectability.predicted_strategy}]`, "thought");
+                if (data.resurrectability.risk_factors && data.resurrectability.risk_factors.length > 0) {
+                    logTerminal(`  ⚠️ Tabular Anomaly: ${data.resurrectability.risk_factors[0]}`, "normal");
+                }
+            }
+            logTerminal("🛡️ Auth0 for AI Agents: Token Vault security gate active for container executions.", "system");
             logTerminal(`Exhumation complete. Found ${data.total_commits} commits. Lead Creator: ${author}.`, "success");
         } catch (err) {
             showToast(`Exhumation error: ${err.message}`, "error");
