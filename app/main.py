@@ -15,19 +15,23 @@ Features:
 from __future__ import annotations
 
 import asyncio
+import ipaddress
 import json
 import os
 import re
 import shutil
 import tempfile
+import time
 from contextlib import asynccontextmanager
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
+from urllib.parse import urlparse
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Request, Response, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -81,9 +85,22 @@ async def add_security_headers(request: Request, call_next):
     response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
     response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
     response.headers["Permissions-Policy"] = "geolocation=(), microphone=(), camera=()"
+    response.headers["Content-Security-Policy"] = (
+        "default-src 'self' https: data: blob:; "
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; "
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; "
+        "font-src 'self' https://fonts.gstatic.com data:; "
+        "connect-src 'self' wss: ws: https:; "
+        "img-src 'self' data: https: blob:; "
+        "media-src 'self' data: blob: https:; "
+        "frame-src 'self' blob: data: about:;"
+    )
     if request.url.path in ("/", "/necromancer") or request.url.path.startswith("/static"):
         response.headers["Cache-Control"] = "no-cache, must-revalidate"
     return response
+
+# High-Performance GZip Compression Middleware (Compresses large Ofrenda HTML & diff payloads)
+app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 # CORS
 app.add_middleware(
@@ -166,17 +183,56 @@ async def health_check():
 
 
 # ==========================================
-# REST API Endpoints with Input Sanitization
+# REST API Endpoints with Security & Caching
 # ==========================================
 
 GIT_URL_REGEX = re.compile(r"^(https?://|git@)[a-zA-Z0-9\._\-:/]+(\.git)?$")
+DISALLOWED_HOSTS = {"localhost", "127.0.0.1", "0.0.0.0", "169.254.169.254", "metadata.google.internal"}
+
+# Performance caches & sliding-window rate limiters
+_exhume_cache: dict[str, tuple[float, dict]] = {}
+_rate_limits: dict[str, list[float]] = {}
+
+
+def _check_rate_limit(request: Request = None, max_requests: int = 40, window: float = 60.0) -> None:
+    """Protects against Denial-of-Service and runaway automated scraping."""
+    if not request or not request.client:
+        return
+    client_ip = request.client.host or "127.0.0.1"
+    now = time.time()
+    times = [t for t in _rate_limits.get(client_ip, []) if now - t < window]
+    if len(times) >= max_requests:
+        raise HTTPException(status_code=429, detail="Too many séance requests. Please pause a moment before exhuming again.")
+    times.append(now)
+    _rate_limits[client_ip] = times
+
+
+def _is_safe_remote_url(url_str: str) -> bool:
+    """Defends against Server-Side Request Forgery (SSRF) and private cloud metadata exfiltration."""
+    try:
+        parsed = urlparse(url_str)
+        if parsed.scheme not in ("http", "https"):
+            return False
+        host = (parsed.hostname or "").lower()
+        if not host or host in DISALLOWED_HOSTS:
+            return False
+        try:
+            ip = ipaddress.ip_address(host)
+            if ip.is_private or ip.is_loopback or ip.is_link_local:
+                return False
+        except ValueError:
+            pass
+        return True
+    except Exception:
+        return False
 
 
 def _resolve_repo(repo_input: str) -> tuple[Path, Optional[Path]]:
     """
-    Sanitizes repository input and prevents path traversal attacks:
+    Sanitizes repository input and prevents path traversal & SSRF attacks:
+    - Blocks private IP ranges and cloud metadata endpoints
     - Rejects dangerous path tokens ('..', '/etc', 'system32')
-    - Clones safe remote git URLs into temporary sandboxes
+    - Clones safe remote git URLs using fast shallow depth=20 single-branch
     """
     repo_str = repo_input.strip()
 
@@ -184,10 +240,14 @@ def _resolve_repo(repo_input: str) -> tuple[Path, Optional[Path]]:
     if repo_str.startswith("http://") or repo_str.startswith("https://") or repo_str.startswith("git@"):
         if not GIT_URL_REGEX.match(repo_str):
             raise HTTPException(status_code=400, detail="Malformed git repository URL format.")
+        if repo_str.startswith("http://") or repo_str.startswith("https://"):
+            if not _is_safe_remote_url(repo_str):
+                raise HTTPException(status_code=400, detail="Security violation: Remote repository URL points to an internal or restricted network address.")
         from git import Repo
         temp_clone = Path(tempfile.mkdtemp(prefix="necromancer_remote_"))
         try:
-            Repo.clone_from(repo_str, temp_clone, depth=50)
+            # Fast shallow clone: single branch with depth=20 to minimize transfer time and disk footprint
+            Repo.clone_from(repo_str, temp_clone, depth=20, single_branch=True)
             return temp_clone, temp_clone
         except Exception as err:
             shutil.rmtree(temp_clone, ignore_errors=True)
@@ -211,12 +271,23 @@ def _resolve_repo(repo_input: str) -> tuple[Path, Optional[Path]]:
 
 
 @app.post("/api/exhume")
-async def exhume_repo_endpoint(req: ExhumeRequest):
-    """Exhumes repository metadata, contributors, and commit era."""
+async def exhume_repo_endpoint(req: ExhumeRequest, request: Request = None):
+    """Exhumes repository metadata, contributors, and commit era with in-memory caching."""
+    if request:
+        _check_rate_limit(request, max_requests=40, window=60.0)
+
+    # In-memory LRU cache check (10-minute TTL)
+    cache_key = req.repo_path.strip()
+    now = time.time()
+    if cache_key in _exhume_cache:
+        cached_time, cached_data = _exhume_cache[cache_key]
+        if now - cached_time < 600.0:
+            return cached_data
+
     temp_dir: Optional[Path] = None
     try:
         repo_path, temp_dir = _resolve_repo(req.repo_path)
-        metadata = ExhumationEngine.exhume(str(repo_path))
+        metadata = await asyncio.to_thread(ExhumationEngine.exhume, str(repo_path))
         data = metadata.model_dump() if hasattr(metadata, "model_dump") else metadata.dict()
 
         # If no contributors detected (e.g. fresh or empty git repo), provide fallback
@@ -225,6 +296,7 @@ async def exhume_repo_endpoint(req: ExhumeRequest):
                 {"name": "Open Source Contributor", "email": "contributor@archive.org", "commit_count": data.get("total_commits", 0)}
             ]
 
+        _exhume_cache[cache_key] = (now, data)
         return data
     except HTTPException:
         raise
@@ -244,7 +316,7 @@ async def sample_eulogy_endpoint(creator: Optional[str] = None):
         f"Years drifted through the cold void, but your foundational logic endures ... "
         f"We awaken your ghost from the machine ... Rest well, creator ... your code shall never die."
     )
-    audio = EulogyEngine.synthesize_speech(sample_text)
+    audio = await asyncio.to_thread(EulogyEngine.synthesize_speech, sample_text)
     return {
         "creator": author_name,
         "eulogy_text": sample_text,
@@ -253,16 +325,19 @@ async def sample_eulogy_endpoint(creator: Optional[str] = None):
 
 
 @app.post("/api/resurrect")
-async def resurrect_endpoint(req: ResurrectRequest):
-    """Executes the closed-loop agent resurrection harness."""
+async def resurrect_endpoint(req: ResurrectRequest, request: Request = None):
+    """Executes the closed-loop agent resurrection harness in non-blocking thread."""
+    if request:
+        _check_rate_limit(request, max_requests=20, window=60.0)
+
     temp_dir: Optional[Path] = None
     try:
         repo_path, temp_dir = _resolve_repo(req.repo_path)
-        tombstone = ExhumationEngine.exhume(str(repo_path))
+        tombstone = await asyncio.to_thread(ExhumationEngine.exhume, str(repo_path))
 
         sandbox = DockerSandbox()
         agent = ResurrectionAgent(sandbox=sandbox)
-        result = agent.resurrect(tombstone, preferred_strategy=req.strategy)
+        result = await asyncio.to_thread(agent.resurrect, tombstone, preferred_strategy=req.strategy)
 
         # Record in Graveyard Database
         graveyard_db.record_ofrenda(tombstone, result, eulogy_text="")
@@ -278,24 +353,27 @@ async def resurrect_endpoint(req: ResurrectRequest):
 
 
 @app.post("/api/ofrenda")
-async def generate_ofrenda_endpoint(req: OfrendaRequest):
+async def generate_ofrenda_endpoint(req: OfrendaRequest, request: Request = None):
     """Generates a standalone commemorative HTML Ofrenda and ElevenLabs audio tribute."""
+    if request:
+        _check_rate_limit(request, max_requests=25, window=60.0)
+
     temp_dir: Optional[Path] = None
     try:
         repo_path, temp_dir = _resolve_repo(req.repo_path)
-        tombstone = ExhumationEngine.exhume(str(repo_path))
+        tombstone = await asyncio.to_thread(ExhumationEngine.exhume, str(repo_path))
 
         sandbox = DockerSandbox()
         agent = ResurrectionAgent(sandbox=sandbox)
-        result = agent.resurrect(tombstone, preferred_strategy=req.strategy)
+        result = await asyncio.to_thread(agent.resurrect, tombstone, preferred_strategy=req.strategy)
 
         # Generate eulogy and speech
-        eulogy_text = EulogyEngine.compose_text(tombstone)
+        eulogy_text = await asyncio.to_thread(EulogyEngine.compose_text, tombstone)
         audio = None
         if req.generate_audio:
-            audio = EulogyEngine.synthesize_speech(eulogy_text)
+            audio = await asyncio.to_thread(EulogyEngine.synthesize_speech, eulogy_text)
 
-        html_content = OfrendaGenerator.render_html(tombstone, result, audio=audio)
+        html_content = await asyncio.to_thread(OfrendaGenerator.render_html, tombstone, result, audio=audio)
 
         # Save to database
         graveyard_db.record_ofrenda(tombstone, result, eulogy_text)

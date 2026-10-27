@@ -930,3 +930,181 @@ body {
     background: rgba(255, 191, 0, 0.15);
     box-shadow: 0 0 15px rgba(255, 191, 0, 0.3);
 }
+
+/* ==========================================
+   INSTANT PRESET CHIPS
+   ========================================== */
+.demo-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.btn-demo-chip {
+    background: #141722;
+    border: 1px solid var(--card-border);
+    color: var(--pale-bone);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.45rem 0.85rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.btn-demo-chip small {
+    color: var(--text-muted);
+    font-weight: 400;
+    font-size: 0.72rem;
+}
+
+.btn-demo-chip:hover {
+    border-color: var(--marigold);
+    color: var(--cempasuchil);
+    transform: translateY(-1px);
+}
+
+.btn-demo-chip.active {
+    background: rgba(255, 117, 24, 0.18);
+    border-color: var(--marigold);
+    color: var(--cempasuchil);
+    box-shadow: 0 0 10px rgba(255, 117, 24, 0.25);
+}
+
+/* ==========================================
+   TERMINAL TOOLBAR & VITALS BADGES
+   ========================================== */
+.terminal-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0d0f15;
+    border-bottom: 1px solid var(--card-border);
+    padding: 0.4rem 0.85rem;
+    font-size: 0.75rem;
+}
+
+.terminal-status {
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--font-mono);
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--success-jade);
+    box-shadow: 0 0 8px var(--success-jade);
+    display: inline-block;
+}
+
+.terminal-tools {
+    display: flex;
+    gap: 0.4rem;
+}
+
+.btn-term-tool {
+    background: #161823;
+    border: 1px solid var(--card-border);
+    color: var(--pale-bone);
+    padding: 0.25rem 0.6rem;
+    font-size: 0.72rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-term-tool:hover {
+    border-color: var(--marigold);
+    color: var(--cempasuchil);
+}
+
+.vital-badge {
+    background: #141722;
+    border: 1px solid var(--card-border);
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.72rem;
+    color: var(--pale-bone);
+    font-family: var(--font-mono);
+}
+
+.vital-badge.sec-badge {
+    border-color: rgba(46, 204, 113, 0.4);
+    color: var(--success-jade);
+    background: rgba(46, 204, 113, 0.08);
+}
+
+/* ==========================================
+   TOAST NOTIFICATIONS
+   ========================================== */
+.toast-container {
+    position: fixed;
+    top: 1.5rem;
+    right: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+.toast {
+    background: #151822;
+    border: 1px solid var(--marigold);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 15px rgba(255, 117, 24, 0.25);
+    border-radius: 8px;
+    padding: 0.85rem 1.25rem;
+    color: var(--pale-bone);
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    pointer-events: auto;
+    animation: toastSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    max-width: 380px;
+}
+
+.toast.toast-success {
+    border-color: var(--success-jade);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 15px rgba(46, 204, 113, 0.25);
+}
+
+.toast.toast-error {
+    border-color: var(--fail-crimson);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 15px rgba(231, 76, 60, 0.25);
+}
+
+.toast.fade-out {
+    animation: toastFadeOut 0.3s forwards;
+}
+
+@keyframes toastSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes toastFadeOut {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(40px);
+    }
+}

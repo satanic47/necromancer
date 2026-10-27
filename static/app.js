@@ -310,17 +310,41 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ==========================================
-    // 4. GUIDED DEMO QUICK-LOAD BUTTON
+    // 4. INSTANT PRESET DEMO CHIPS & TOASTS
     // ==========================================
-    if (btnLoadDemo) {
-        btnLoadDemo.addEventListener("click", () => {
+    const toastContainer = document.getElementById("toastContainer");
+    function showToast(message, type = "normal", duration = 3500) {
+        if (!toastContainer) return;
+        const toast = document.createElement("div");
+        toast.className = `toast toast-${type}`;
+        const icons = { success: "✔", error: "✘", normal: "🕯️" };
+        toast.innerHTML = `<span>${icons[type] || "🕯️"}</span> <span>${message}</span>`;
+        toastContainer.appendChild(toast);
+        setTimeout(() => {
+            toast.classList.add("fade-out");
+            setTimeout(() => toast.remove(), 300);
+        }, duration);
+    }
+
+    const demoChips = document.querySelectorAll(".btn-demo-chip");
+    demoChips.forEach(chip => {
+        chip.addEventListener("click", () => {
             playBellToll();
-            repoInput.value = "https://github.com/satanic47/necromancer.git";
-            logTerminal("✨ Guided Demo: Loaded vintage repository 'https://github.com/satanic47/necromancer.git'", "system");
-            logTerminal("Triggering automatic tombstone exhumation to identify original git author...", "thought");
+            demoChips.forEach(c => c.classList.remove("active"));
+            chip.classList.add("active");
+
+            const repoUrl = chip.dataset.repo;
+            const strat = chip.dataset.strategy;
+            repoInput.value = repoUrl;
+
+            const radio = document.querySelector(`input[name="strategy"][value="${strat}"]`);
+            if (radio) radio.checked = true;
+
+            showToast(`Loaded preset: ${chip.textContent.trim().split(" ")[0]}`, "normal");
+            logTerminal(`✨ Loaded preset repository: '${repoUrl}' [Strategy: ${strat}]`, "system");
             btnExhume.click();
         });
-    }
+    });
 
     // ==========================================
     // 5. TIME-MACHINE SLIDER UPDATES
@@ -516,12 +540,41 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // Terminal Toolbar Tools
+    const btnCopyTerminal = document.getElementById("btnCopyTerminal");
+    const btnClearTerminal = document.getElementById("btnClearTerminal");
+
+    if (btnCopyTerminal) {
+        btnCopyTerminal.addEventListener("click", () => {
+            let fullText = "";
+            if (terminal) {
+                fullText = Array.from(terminal.children).map(c => c.textContent).join("\n");
+            }
+            if (fullText) {
+                navigator.clipboard.writeText(fullText).then(() => {
+                    showToast("Console logs copied to clipboard!", "success");
+                });
+            }
+        });
+    }
+
+    if (btnClearTerminal) {
+        btnClearTerminal.addEventListener("click", () => {
+            if (terminal) terminal.innerHTML = "";
+            if (term) {
+                term.clear();
+                term.writeln("\x1b[90mConsole cleared. Awaiting exhumation instruction...\x1b[0m\r\n");
+            }
+            showToast("Console cleared.", "normal");
+        });
+    }
+
     function startTimer() {
         startTime = Date.now();
         timerInterval = setInterval(() => {
-            const sec = ((Date.now() - startTime) / 1000).toFixed(1);
+            const sec = ((Date.now() - startTime) / 1000).toFixed(0);
             vitalTimer.textContent = `⏱️ ${sec}s`;
-        }, 100);
+        }, 1000);
     }
 
     function stopTimer() {
@@ -561,8 +614,10 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("tsAuthor").textContent = author;
             tombstoneCard.classList.remove("hidden");
 
+            showToast(`Exhumation complete: ${data.total_commits} commits found`, "success");
             logTerminal(`Exhumation complete. Found ${data.total_commits} commits. Lead Creator: ${author}.`, "success");
         } catch (err) {
+            showToast(`Exhumation error: ${err.message}`, "error");
             logTerminal(`Exhumation error: ${err.message}`, "error");
         }
     });
@@ -584,6 +639,9 @@ document.addEventListener("DOMContentLoaded", () => {
         btnViewOfrenda.classList.add("hidden");
         btnDownloadHtml.classList.add("hidden");
         btnDownloadDeathCert.classList.add("hidden");
+
+        const vitalModel = document.getElementById("vitalModel");
+        if (vitalModel) vitalModel.textContent = `🔮 ${strategy}`;
 
         logTerminal(`Commencing Séance for '${repo}' with strategy: ${strategy}`, "system");
         startTimer();

@@ -109,10 +109,21 @@
 
         <!-- Guided Demo Quick-Bar -->
         <div class="guided-demo-bar">
-            <span class="demo-label">✨ Guided Demonstration:</span>
-            <button type="button" id="btnLoadDemo" class="btn-demo-quick">
-                ⚡ Load Vintage Repo (Demo: satanic47/necromancer)
-            </button>
+            <span class="demo-label">✨ Instant Presets:</span>
+            <div class="demo-chips">
+                <button type="button" class="btn-demo-chip active" data-repo="https://github.com/satanic47/necromancer.git" data-strategy="AUTO">
+                    ⚡ satanic47/necromancer <small>(Reference 2026)</small>
+                </button>
+                <button type="button" class="btn-demo-chip" data-repo="https://github.com/mojombo/grit.git" data-strategy="PORT_TO_PRESENT">
+                    🏺 mojombo/grit <small>(Ruby 2014)</small>
+                </button>
+                <button type="button" class="btn-demo-chip" data-repo="https://github.com/kennethreitz/requests.git" data-strategy="PIN_THE_PAST">
+                    🐍 requests <small>(Py2.7 Sunset)</small>
+                </button>
+                <button type="button" class="btn-demo-chip" data-repo="https://github.com/pallets/flask.git" data-strategy="PORT_TO_PRESENT">
+                    🔮 flask <small>(Legacy WSGI)</small>
+                </button>
+            </div>
             <span class="demo-hint">One-click exhumation of dead code without typing!</span>
         </div>
 
@@ -210,11 +221,20 @@
                         <div class="console-vitals">
                             <span id="vitalTimer">⏱️ 0.0s</span>
                             <span id="vitalSteps">🪜 Step 0</span>
+                            <span id="vitalModel" class="vital-badge">🧠 Agent Engine</span>
+                            <span id="vitalSecurity" class="vital-badge sec-badge">🛡️ Hardened Sandbox</span>
                         </div>
                     </div>
                     
                     <!-- Terminal Tab Pane -->
                     <div id="terminalPane" class="console-pane active">
+                        <div class="terminal-toolbar">
+                            <span class="terminal-status"><span class="status-dot"></span> Agent Ready • Sandbox Active</span>
+                            <div class="terminal-tools">
+                                <button type="button" id="btnCopyTerminal" class="btn-term-tool" title="Copy Console Logs">📋 Copy Logs</button>
+                                <button type="button" id="btnClearTerminal" class="btn-term-tool" title="Clear Console">🧹 Clear</button>
+                            </div>
+                        </div>
                         <div id="xtermContainer" class="xterm-container"></div>
                         <div id="consoleTerminal" class="console-terminal hidden">
                             <div class="terminal-line system">=== Necromancer Ghost in the Machine Séance Initialized ===</div>
@@ -262,6 +282,9 @@
         </div>
     </div>
 
-    <script src="/static/app.js?v=2.2.0"></script>
+    <!-- Floating Toast Notifications -->
+    <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+    <script src="/static/app.js?v=2.3.0"></script>
 </body>
 </html>

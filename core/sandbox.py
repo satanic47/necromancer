@@ -12,6 +12,7 @@ from __future__ import annotations
 import os
 import shutil
 import subprocess
+import sys
 import tempfile
 import time
 from dataclasses import dataclass
@@ -115,9 +116,19 @@ class DockerSandbox:
         # Fallback to local subprocess isolation if Docker daemon is not accessible in this environment
         if not self.docker_available or not self.client:
             try:
+                # Security hardening: avoid shell=True when executing standard pytest runners
+                cmd_to_run = command
+                use_shell = True
+                if command == "pytest":
+                    cmd_to_run = [sys.executable, "-m", "pytest"]
+                    use_shell = False
+                elif command.startswith("python -m pytest"):
+                    cmd_to_run = [sys.executable, "-m", "pytest"] + command.split()[3:]
+                    use_shell = False
+
                 proc = subprocess.run(
-                    command,
-                    shell=True,
+                    cmd_to_run,
+                    shell=use_shell,
                     cwd=str(workspace_path),
                     capture_output=True,
                     text=True,
