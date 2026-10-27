@@ -817,7 +817,24 @@ document.addEventListener("DOMContentLoaded", () => {
             const doc = parser.parseFromString(activeOfrendaHtml, "text/html");
             const certCard = doc.getElementById("deathCertificateCard");
 
-            if (typeof html2pdf !== "undefined" && certCard) {
+            if (!certCard) {
+                btnViewOfrenda.click();
+                return;
+            }
+
+            // On-demand dynamic loading of html2pdf engine to optimize Lighthouse & LCP
+            async function generatePdf() {
+                if (typeof html2pdf === "undefined") {
+                    showToast("Loading PDF export engine...", "normal", 2500);
+                    await new Promise((resolve, reject) => {
+                        const s = document.createElement("script");
+                        s.src = "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
+                        s.onload = resolve;
+                        s.onerror = reject;
+                        document.head.appendChild(s);
+                    });
+                }
+
                 const tempDiv = document.createElement("div");
                 tempDiv.style.position = "fixed";
                 tempDiv.style.left = "-9999px";
@@ -841,10 +858,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 html2pdf().set(opt).from(tempDiv).save().then(() => {
                     document.body.removeChild(tempDiv);
                     logTerminal("📜 Official PDF Death Certificate exported successfully!", "success");
+                    showToast("Death Certificate PDF downloaded!", "success");
                 });
-            } else {
-                btnViewOfrenda.click();
             }
+
+            generatePdf().catch(err => {
+                console.error("PDF generation failed:", err);
+                showToast("PDF generation failed, opening ofrenda view.", "error");
+                btnViewOfrenda.click();
+            });
         });
     }
 

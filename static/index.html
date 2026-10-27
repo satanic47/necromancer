@@ -2,29 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <meta name="description" content="Necromancer: The Ghost in the Machine. Autonomous AI agent resurrecting legacy open-source software across 12 compiler epochs using Prior Labs TabPFN tabular inference, SerpApi grounding, and open-weight Gemma with zero test regression.">
+    <meta name="theme-color" content="#ff7518">
     <title>Necromancer | The Ghost in the Machine</title>
-    <link rel="stylesheet" href="/static/style.css?v=2.4.0">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💀</text></svg>">
+
+    <!-- Animated Ghost Rider Flaming Skull Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/static/ghostrider_skull.svg">
+    <link rel="alternate icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💀</text></svg>">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/static/style.css?v=2.5.0">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 
-    <!-- xterm.js Terminal with Fit Addon -->
+    <!-- xterm.js Terminal with Fit Addon (Deferred for high Lighthouse LCP) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/css/xterm.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/lib/xterm.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@xterm/addon-fit@0.10.0/lib/addon-fit.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/lib/xterm.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@xterm/addon-fit@0.10.0/lib/addon-fit.min.js"></script>
 
-    <!-- Prism.js Syntax Highlighting for PR Diffs -->
+    <!-- Prism.js Syntax Highlighting for PR Diffs (Deferred) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-diff.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-toml.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
-
-    <!-- html2pdf for One-Click Death Certificate PDF Export -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-diff.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-toml.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
 </head>
 <body>
     <!-- Halloween Overlay Elements (Direct from arcadepointscalci.in/calculator) -->
@@ -34,49 +37,49 @@
 
         <!-- Top Left Cobweb -->
         <div class="hw-item" style="top: 0; left: 0; width: 230px; --rot: 0deg; --flip: 1; --glow: rgba(139, 107, 255, 0.45);">
-            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img5.png" alt="Spiderweb" draggable="false">
+            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img5.png" alt="Spiderweb" draggable="false" loading="lazy" decoding="async" fetchpriority="low">
         </div>
 
         <!-- Top Right Cobweb -->
         <div class="hw-item" style="top: 0; right: 0; width: 230px; --rot: 0deg; --flip: 1; --glow: rgba(139, 107, 255, 0.45);">
-            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img3.png" alt="Spiderweb" draggable="false">
+            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img3.png" alt="Spiderweb" draggable="false" loading="lazy" decoding="async" fetchpriority="low">
         </div>
 
         <!-- Hanging Animated Spider with Silk Thread on Left -->
         <div class="hw-item hw-sway" style="top: 0; left: 14vw; width: 68px; --rot: 0deg; --flip: 1; --glow: rgba(139, 107, 255, 0.7);">
             <span class="hw-thread" style="height: 110px;"></span>
-            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img4.png" alt="Hanging Spider" draggable="false">
+            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img4.png" alt="Hanging Spider" draggable="false" loading="lazy" decoding="async" fetchpriority="low">
         </div>
 
         <!-- Bottom Left: Haunted Tree, Trick or Treat Pumpkins, Cauldron, Potion -->
         <div class="hw-item hw-nomob" style="bottom: 0; left: 0.5vw; width: 105px; --rot: -3deg; --flip: 1; --glow: rgba(0, 0, 0, 0.8);">
-            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img2.png" alt="Haunted Tree & Bats" draggable="false">
+            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img2.png" alt="Haunted Tree & Bats" draggable="false" loading="lazy" decoding="async" fetchpriority="low">
         </div>
         <div class="hw-item" style="bottom: 0; left: 5.5vw; width: 105px; --rot: -4deg; --flip: 1; --glow: rgba(255, 140, 0, 0.65);">
-            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img10.png" alt="Trick or Treat Pumpkin" draggable="false">
+            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img10.png" alt="Trick or Treat Pumpkin" draggable="false" loading="lazy" decoding="async" fetchpriority="low">
         </div>
         <div class="hw-item hw-nomob" style="bottom: 0; left: 12vw; width: 120px; --rot: 0deg; --flip: 1; --glow: rgba(255, 140, 0, 0.55);">
-            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img12.png" alt="Halloween Trick or Treat" draggable="false">
+            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img12.png" alt="Halloween Trick or Treat" draggable="false" loading="lazy" decoding="async" fetchpriority="low">
         </div>
         <div class="hw-item hw-nomob" style="bottom: 0; left: 19vw; width: 120px; --rot: 0deg; --flip: 1; --glow: rgba(90, 255, 140, 0.6);">
-            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img6.png" alt="Spooky Cauldron" draggable="false">
+            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img6.png" alt="Spooky Cauldron" draggable="false" loading="lazy" decoding="async" fetchpriority="low">
         </div>
         <div class="hw-item hw-nomob" style="bottom: 0; left: 26.5vw; width: 55px; --rot: 4deg; --flip: 1; --glow: rgba(160, 100, 255, 0.6);">
-            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img1.png" alt="Potion Bottle" draggable="false">
+            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img1.png" alt="Potion Bottle" draggable="false" loading="lazy" decoding="async" fetchpriority="low">
         </div>
 
         <!-- Bottom Right: Haunted Tree, Witch Hat, Screaming Pumpkin, Candle -->
         <div class="hw-item hw-nomob" style="bottom: 0; right: 0.5vw; width: 130px; --rot: 5deg; --flip: 1; --glow: rgba(0, 0, 0, 0.8);">
-            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img8.png" alt="Haunted Tree & Witch Hat" draggable="false">
+            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img8.png" alt="Haunted Tree & Witch Hat" draggable="false" loading="lazy" decoding="async" fetchpriority="low">
         </div>
         <div class="hw-item" style="bottom: 0; right: 7.5vw; width: 95px; --rot: 3deg; --flip: 1; --glow: rgba(255, 140, 0, 0.6);">
-            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img9.png" alt="Screaming Ghost Pumpkin" draggable="false">
+            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img9.png" alt="Screaming Ghost Pumpkin" draggable="false" loading="lazy" decoding="async" fetchpriority="low">
         </div>
         <div class="hw-item hw-flicker hw-nomob" style="bottom: 0; right: 13.5vw; width: 55px; --rot: 0deg; --flip: 1; --glow: rgba(255, 170, 40, 0.85);">
-            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img7.png" alt="Flickering Candle" draggable="false">
+            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img7.png" alt="Flickering Candle" draggable="false" loading="lazy" decoding="async" fetchpriority="low">
         </div>
         <div class="hw-item hw-nomob" style="bottom: 0; right: 17.5vw; width: 75px; --rot: -3deg; --flip: -1; --glow: rgba(255, 140, 0, 0.5);">
-            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img10.png" alt="Glowing Pumpkin" draggable="false">
+            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img10.png" alt="Glowing Pumpkin" draggable="false" loading="lazy" decoding="async" fetchpriority="low">
         </div>
     </div>
 
@@ -116,10 +119,8 @@
         <!-- Spooky Altar Header -->
         <header class="app-header">
             <div class="brand">
-                <div class="brand-altar-flames">
-                    <span class="candle-flame left">🔥</span>
-                    <span class="brand-icon">💀</span>
-                    <span class="candle-flame right">🔥</span>
+                <div class="brand-altar-flames" title="The Ghost in the Machine: Ghost Rider Flaming Skull">
+                    <img src="/static/ghostrider_skull.svg" alt="Ghost Rider Flaming Skull" class="ghostrider-brand-skull" width="70" height="76">
                 </div>
                 <div class="brand-text">
                     <h1>NECROMANCER</h1>
@@ -133,7 +134,7 @@
                     <span id="soundIcon">🔇</span>
                     <span id="soundLabel">Scary Ambient Voice & Drone: OFF</span>
                 </button>
-                <audio id="ambientVoiceLoop" src="/static/scary_ghost_loop.mp3" loop preload="auto"></audio>
+                <audio id="ambientVoiceLoop" src="/static/scary_ghost_loop.mp3" loop preload="none"></audio>
                 <div class="partner-badges">
                     <span class="partner-badge tabpfn">📊 Prior Labs TabPFN-3.5</span>
                     <span class="partner-badge serpapi">🔍 SerpApi Grounding</span>
@@ -453,7 +454,7 @@
     <!-- Floating Toast Notifications -->
     <div id="toastContainer" class="toast-container" aria-live="polite"></div>
 
-    <script src="/static/app.js?v=2.4.0"></script>
+    <script src="/static/app.js?v=2.5.0"></script>
     <!-- Floating SFX & Theme Dock (.sfx-dock) direct from arcadepointscalci.in -->
     <div class="sfx-dock" aria-label="Halloween Theme & Sound Dock">
         <button type="button" id="btnHalloweenToggle" class="sfx-toggle sfx-theme" title="Toggle Spooky Halloween Theme (Webs, Pumpkins & Fog)">
