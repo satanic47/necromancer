@@ -1386,3 +1386,292 @@ body.halloween-off .sfx-wisp {
     color: #ffbf00;
     text-shadow: 0 0 8px rgba(255, 191, 0, 0.6);
 }
+
+
+/* ==========================================================================
+   Halloween White Mode (High Visibility for Spiderwebs, Trees & Pumpkins)
+   Active by default / when toggled on (body:not(.halloween-off))
+   ========================================================================== */
+
+body:not(.halloween-off) {
+    background-color: #ffffff !important;
+    color: #1e293b;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body:not(.halloween-off) #mistCanvas {
+    opacity: 0.12;
+}
+
+/* Softer Edge Vignette on White Canvas */
+body:not(.halloween-off) .hw-fog {
+    box-shadow: inset 0 0 90px 10px rgba(0, 0, 0, 0.12);
+    background: 
+        linear-gradient(to top, rgba(70, 30, 120, 0.10), transparent 22%),
+        radial-gradient(ellipse at center, transparent 65%, rgba(40, 15, 80, 0.08) 100%);
+}
+
+body:not(.halloween-off) .hw-fog::before {
+    background-image: 
+        radial-gradient(ellipse 16% 24% at 0% 10%, rgba(0, 0, 0, 0.18) 0%, transparent 72%),
+        radial-gradient(ellipse 20% 30% at 0% 40%, rgba(0, 0, 0, 0.18) 0%, transparent 72%),
+        radial-gradient(ellipse 15% 22% at 0% 70%, rgba(0, 0, 0, 0.18) 0%, transparent 72%),
+        radial-gradient(ellipse 18% 28% at 0% 95%, rgba(0, 0, 0, 0.18) 0%, transparent 72%),
+        radial-gradient(ellipse 16% 25% at 100% 15%, rgba(0, 0, 0, 0.18) 0%, transparent 72%),
+        radial-gradient(ellipse 20% 30% at 100% 45%, rgba(0, 0, 0, 0.18) 0%, transparent 72%),
+        radial-gradient(ellipse 15% 24% at 100% 75%, rgba(0, 0, 0, 0.18) 0%, transparent 72%),
+        radial-gradient(ellipse 18% 28% at 100% 98%, rgba(0, 0, 0, 0.18) 0%, transparent 72%);
+}
+
+body:not(.halloween-off) .hw-fog::after {
+    background-image: 
+        radial-gradient(ellipse 18% 26% at 0% 25%, rgba(0, 0, 0, 0.14) 0%, transparent 72%),
+        radial-gradient(ellipse 16% 24% at 0% 55%, rgba(0, 0, 0, 0.14) 0%, transparent 72%),
+        radial-gradient(ellipse 20% 28% at 0% 85%, rgba(0, 0, 0, 0.14) 0%, transparent 72%),
+        radial-gradient(ellipse 18% 26% at 100% 30%, rgba(0, 0, 0, 0.14) 0%, transparent 72%),
+        radial-gradient(ellipse 16% 25% at 100% 60%, rgba(0, 0, 0, 0.14) 0%, transparent 72%),
+        radial-gradient(ellipse 20% 30% at 100% 88%, rgba(0, 0, 0, 0.14) 0%, transparent 72%);
+}
+
+/* Spiderwebs and Overlay Enhancements on White Background */
+body:not(.halloween-off) .hw-item {
+    filter: drop-shadow(0 0 10px var(--glow, transparent)) drop-shadow(0 2px 10px rgba(0, 0, 0, 0.22));
+}
+
+body:not(.halloween-off) .hw-thread {
+    background: rgba(60, 45, 80, 0.7);
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Header & Typography in White Mode */
+body:not(.halloween-off) .brand-text h1 {
+    color: #0f172a;
+    text-shadow: 0 0 16px rgba(255, 117, 24, 0.25);
+}
+
+body:not(.halloween-off) .brand-text .tagline {
+    color: #475569;
+}
+
+body:not(.halloween-off) .status-text {
+    color: #475569;
+}
+
+body:not(.halloween-off) .btn-toggle-sound {
+    background: #ffffff;
+    color: #1e293b;
+    border: 1px solid #cbd5e1;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+body:not(.halloween-off) .btn-toggle-sound:hover {
+    background: #f8fafc;
+    border-color: var(--marigold);
+}
+
+/* Audio Player Hero Bar */
+body:not(.halloween-off) .hero-audio-bar {
+    background: #ffffff;
+    border: 1px solid rgba(255, 117, 24, 0.35);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+body:not(.halloween-off) .hero-title {
+    color: #0f172a;
+}
+
+body:not(.halloween-off) .hero-desc {
+    color: #475569;
+}
+
+/* Preset Chips */
+body:not(.halloween-off) .preset-label {
+    color: #64748b;
+}
+
+body:not(.halloween-off) .preset-chip {
+    background: #ffffff;
+    color: #1e293b;
+    border: 1px solid #cbd5e1;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+body:not(.halloween-off) .preset-chip:hover {
+    background: #fff7ed;
+    color: #c2410c;
+    border-color: var(--marigold);
+    box-shadow: 0 4px 12px rgba(255, 117, 24, 0.18);
+}
+
+/* Cards & Panels */
+body:not(.halloween-off) .panel-card,
+body:not(.halloween-off) .console-card,
+body:not(.halloween-off) .time-machine-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+body:not(.halloween-off) .card-title {
+    color: #0f172a;
+}
+
+body:not(.halloween-off) .card-desc {
+    color: #64748b;
+}
+
+/* Form Controls */
+body:not(.halloween-off) label {
+    color: #334155;
+}
+
+body:not(.halloween-off) #repoInput {
+    background: #f8fafc;
+    color: #0f172a;
+    border: 1px solid #cbd5e1;
+}
+
+body:not(.halloween-off) #repoInput:focus {
+    background: #ffffff;
+    border-color: var(--marigold);
+    box-shadow: 0 0 0 3px rgba(255, 117, 24, 0.15);
+}
+
+body:not(.halloween-off) .radio-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    color: #1e293b;
+}
+
+body:not(.halloween-off) .radio-card:hover {
+    background: #f1f5f9;
+}
+
+body:not(.halloween-off) .radio-card:has(input:checked) {
+    background: #fff7ed;
+    border-color: var(--marigold);
+    box-shadow: 0 0 12px rgba(255, 117, 24, 0.15);
+}
+
+body:not(.halloween-off) .radio-content strong {
+    color: #0f172a;
+}
+
+body:not(.halloween-off) .radio-content small {
+    color: #64748b;
+}
+
+/* Buttons */
+body:not(.halloween-off) .btn-secondary {
+    background: #334155;
+    color: #ffffff;
+}
+
+body:not(.halloween-off) .btn-secondary:hover {
+    background: #1e293b;
+}
+
+body:not(.halloween-off) .btn-outline {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    color: #1e293b;
+}
+
+body:not(.halloween-off) .btn-outline:hover {
+    background: #f1f5f9;
+}
+
+/* Tombstone Preview */
+body:not(.halloween-off) .tombstone-preview {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+}
+
+body:not(.halloween-off) #tsName {
+    color: #0f172a;
+}
+
+body:not(.halloween-off) .tombstone-grid strong {
+    color: #0f172a;
+}
+
+body:not(.halloween-off) .tombstone-grid small {
+    color: #64748b;
+}
+
+/* Time Machine Output */
+body:not(.halloween-off) .slider-output {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    color: #1e293b;
+}
+
+body:not(.halloween-off) .slider-labels {
+    color: #64748b;
+}
+
+/* Console & Terminal Header */
+body:not(.halloween-off) .console-header {
+    border-bottom: 1px solid #e2e8f0;
+}
+
+body:not(.halloween-off) .console-tab-btn {
+    color: #64748b;
+    border: 1px solid #cbd5e1;
+    background: transparent;
+}
+
+body:not(.halloween-off) .console-tab-btn:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
+body:not(.halloween-off) .console-tab-btn.active {
+    background: #f8fafc;
+    color: #0f172a;
+    border-color: var(--marigold);
+}
+
+body:not(.halloween-off) #vitalTimer,
+body:not(.halloween-off) #vitalSteps {
+    color: #334155;
+}
+
+body:not(.halloween-off) .vital-badge {
+    background: #f1f5f9;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+}
+
+/* Diff Viewer in White Mode */
+body:not(.halloween-off) .diff-file-sidebar {
+    background: #f8fafc;
+    border-right: 1px solid #e2e8f0;
+}
+
+body:not(.halloween-off) .diff-file-item {
+    color: #334155;
+}
+
+body:not(.halloween-off) .diff-file-item:hover {
+    background: #e2e8f0;
+}
+
+body:not(.halloween-off) .diff-file-item.active {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+/* App Footer in White Mode */
+body:not(.halloween-off) .app-footer {
+    border-top: 1px solid rgba(255, 117, 24, 0.3);
+    color: #475569;
+}
+
+body:not(.halloween-off) .footer-title {
+    color: #0f172a;
+}
+
+body:not(.halloween-off) .footer-meta {
+    color: #64748b;
+}
