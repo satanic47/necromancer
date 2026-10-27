@@ -654,7 +654,7 @@ class OfrendaGenerator:
                 Honoring Open Source Creators on Día de los Muertos
             </p>
             <p style="margin-top: 0.35rem; font-size: 0.8rem; color: var(--muted-text);">
-                Powered by <strong>ElevenLabs</strong>, <strong>Sentry</strong>, <strong>Render</strong>, <strong>.tech Domains</strong> & <strong>Docker</strong>
+                Powered by <strong>Prior Labs TabPFN</strong>, <strong>SerpApi</strong>, <strong>Gemma</strong>, <strong>ElevenLabs</strong>, <strong>Sentry</strong>, <strong>Render</strong>, <strong>.tech Domains</strong>, <strong>Auth0</strong>, <strong>MongoDB Atlas</strong> & <strong>Docker</strong>
             </p>
             <p style="margin-top: 0.5rem; font-size: 0.75rem; color: #666;">
                 Total agent duration: {result.total_duration_seconds}s | Steps executed: {result.total_steps}

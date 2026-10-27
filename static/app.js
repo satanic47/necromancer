@@ -618,10 +618,32 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             document.getElementById("tsAuthor").textContent = author;
 
-            // Prior Labs TabPFN-3.5 Resurrectability Scoring
+            // Prior Labs TabPFN-3.5 Resurrectability Scoring & Diagnostic Gauge
             if (data.resurrectability) {
                 const tsScoreEl = document.getElementById("tsTabpfnScore");
                 if (tsScoreEl) tsScoreEl.textContent = `${data.resurrectability.score}% (${data.resurrectability.predicted_strategy})`;
+
+                // Update Dedicated TabPFN-3.5 Gauge Widget
+                const gaugeDisplay = document.getElementById("tabpfnScoreDisplay");
+                if (gaugeDisplay) gaugeDisplay.textContent = `${data.resurrectability.score}%`;
+                const verdictEl = document.getElementById("tabpfnVerdict");
+                if (verdictEl) verdictEl.textContent = data.resurrectability.recommendation || "HIGH PROBABILITY";
+
+                if (data.resurrectability.features) {
+                    const f = data.resurrectability.features;
+                    const elDormant = document.getElementById("tabpfnDormancy");
+                    if (elDormant) elDormant.textContent = `${f.dormancy_years} yrs`;
+                    const elLoc = document.getElementById("tabpfnLoc");
+                    if (elLoc) elLoc.textContent = Number(f.loc).toLocaleString();
+                    const elEra = document.getElementById("tabpfnEra");
+                    if (elEra) elEra.textContent = `Era ${f.era_year}`;
+                    const elCExt = document.getElementById("tabpfnCExt");
+                    if (elCExt) elCExt.textContent = f.c_extension_count > 0 ? `${f.c_extension_count} C-Ext` : "0 (Pure Python)";
+                    const elTests = document.getElementById("tabpfnTests");
+                    if (elTests) elTests.textContent = f.has_tests ? "Baseline Tests Present" : "No Tests Detected";
+                    const elDeps = document.getElementById("tabpfnDeps");
+                    if (elDeps) elDeps.textContent = `${f.dependency_count} Inactive`;
+                }
             }
 
             tombstoneCard.classList.remove("hidden");
@@ -870,4 +892,69 @@ document.addEventListener("DOMContentLoaded", () => {
             setTimeout(() => wisp.remove(), 1800);
         }
     }, { passive: true });
+
+    // ==========================================
+    // 8. SERPAPI HISTORICAL GROUNDING & MIGRATION INSPECTOR
+    // ==========================================
+    async function inspectSerpMigration(query) {
+        if (!query) return;
+        const btn = document.getElementById("btnSerpSearch");
+        if (btn) btn.disabled = true;
+        try {
+            const res = await fetch(`/api/serp/migration?query=${encodeURIComponent(query)}`);
+            if (!res.ok) throw new Error(await res.text());
+            const data = await res.json();
+
+            const symEl = document.getElementById("serpSymbol");
+            if (symEl) symEl.textContent = data.query;
+            const tgtEl = document.getElementById("serpTarget");
+            if (tgtEl) tgtEl.textContent = data.target || "modern equivalent";
+            const eraEl = document.getElementById("serpEraBadge");
+            if (eraEl) eraEl.textContent = data.era || "Modernized";
+            const rsnEl = document.getElementById("serpReason");
+            if (rsnEl) rsnEl.textContent = data.reason || "Deprecated in legacy runtime.";
+            const codeEl = document.getElementById("serpCodeSnippet");
+            if (codeEl) codeEl.textContent = data.code_snippet || `import ${data.target}`;
+            const linkEl = document.getElementById("serpMirrorUrl");
+            if (linkEl) {
+                linkEl.href = data.mirror_url || "https://pypi.org/";
+                linkEl.textContent = data.mirror_url || "https://pypi.org/";
+            }
+            logTerminal(`🔍 SerpApi Grounding: Searched '${query}' &rarr; Migrated to '${data.target}' (${data.era})`, "thought");
+            showToast(`SerpApi Grounding: Found migration for '${query}'`, "success", 2500);
+        } catch (err) {
+            console.error("SerpApi inspect error:", err);
+            showToast(`SerpApi lookup failed: ${err.message}`, "error");
+        } finally {
+            if (btn) btn.disabled = false;
+        }
+    }
+
+    const serpPresets = document.querySelectorAll(".btn-serp-preset");
+    serpPresets.forEach(preset => {
+        preset.addEventListener("click", () => {
+            serpPresets.forEach(p => p.classList.remove("active"));
+            preset.classList.add("active");
+            const q = preset.dataset.query;
+            const input = document.getElementById("serpQueryInput");
+            if (input) input.value = q;
+            inspectSerpMigration(q);
+        });
+    });
+
+    const btnSerpSearch = document.getElementById("btnSerpSearch");
+    const serpQueryInput = document.getElementById("serpQueryInput");
+    if (btnSerpSearch && serpQueryInput) {
+        btnSerpSearch.addEventListener("click", () => {
+            const q = serpQueryInput.value.trim();
+            if (q) inspectSerpMigration(q);
+        });
+        serpQueryInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                btnSerpSearch.click();
+            }
+        });
+    }
+
 });

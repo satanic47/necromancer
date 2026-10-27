@@ -1783,3 +1783,431 @@ body:not(.halloween-off) .partner-meta-pill.tabpfn-pill strong {
 body:not(.halloween-off) .partner-meta-pill.auth0-pill strong {
     color: #7c3aed;
 }
+
+/* ==========================================================================
+   TL;DR & Invariant Banner, TabPFN & SerpApi Partner Widgets (v2.4.0)
+   ========================================================================== */
+
+/* Header Partner Badges */
+.partner-badge.tabpfn { color: #00ff88; border-color: rgba(0, 255, 136, 0.4); }
+.partner-badge.serpapi { color: #38bdf8; border-color: rgba(56, 189, 248, 0.4); }
+.partner-badge.gemma { color: #c084fc; border-color: rgba(192, 132, 252, 0.4); }
+.partner-badge.auth0 { color: #f472b6; border-color: rgba(244, 114, 182, 0.4); }
+
+/* TL;DR & Invariant Guarantee Banner */
+.tldr-invariant-banner {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    background: linear-gradient(135deg, rgba(26, 18, 37, 0.95), rgba(16, 20, 30, 0.95));
+    border: 2px solid rgba(255, 191, 0, 0.4);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 191, 0, 0.15);
+    border-radius: 14px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.tldr-badge {
+    font-size: 0.75rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+    padding: 0.4rem 0.85rem;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #ff7518, #ffbf00);
+    color: #121212;
+    white-space: nowrap;
+    text-transform: uppercase;
+    box-shadow: 0 2px 8px rgba(255, 117, 24, 0.4);
+}
+
+.tldr-text {
+    flex: 1;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    color: #e2e8f0;
+}
+
+.tldr-text strong {
+    color: #ffbf00;
+}
+
+.tldr-invariant {
+    display: inline-block;
+    margin-left: 0.5rem;
+    padding: 0.15rem 0.55rem;
+    border-radius: 6px;
+    background: rgba(0, 255, 136, 0.12);
+    border: 1px solid rgba(0, 255, 136, 0.4);
+    color: #00ff88;
+    font-weight: 700;
+    font-size: 0.82rem;
+}
+
+/* TabPFN Diagnostic Card */
+.tabpfn-card {
+    border-color: rgba(0, 255, 136, 0.3);
+}
+
+.tabpfn-gauge-box {
+    margin-top: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.gauge-metric-main {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 0.85rem 1.25rem;
+    background: rgba(0, 255, 136, 0.06);
+    border: 1px solid rgba(0, 255, 136, 0.25);
+    border-radius: 12px;
+}
+
+.gauge-value {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: #00ff88;
+    font-family: 'Cinzel', serif;
+    letter-spacing: -1px;
+    text-shadow: 0 0 12px rgba(0, 255, 136, 0.5);
+}
+
+.gauge-label {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.gauge-verdict {
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: #ffbf00;
+    letter-spacing: 0.5px;
+}
+
+.gauge-label small {
+    font-size: 0.75rem;
+    color: var(--text-muted, #8e95a5);
+}
+
+.tabpfn-telemetry-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+}
+
+.telem-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    padding: 0.5rem 0.65rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.telem-item span {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    color: var(--text-muted, #8e95a5);
+    letter-spacing: 0.4px;
+}
+
+.telem-item strong {
+    font-size: 0.82rem;
+    color: #f1f5f9;
+}
+
+/* SerpApi Historical Grounding Card */
+.serp-card {
+    border-color: rgba(56, 189, 248, 0.3);
+}
+
+.serp-quick-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0.75rem 0;
+}
+
+.btn-serp-preset {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.6rem;
+    border-radius: 12px;
+    background: rgba(56, 189, 248, 0.08);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    color: #38bdf8;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-serp-preset:hover, .btn-serp-preset.active {
+    background: #38bdf8;
+    color: #0b1120;
+    border-color: #38bdf8;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+}
+
+.serp-search-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.85rem;
+}
+
+.serp-search-row input {
+    flex: 1;
+    background: #0f172a;
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: 8px;
+    padding: 0.45rem 0.75rem;
+    font-size: 0.82rem;
+    color: #f8fafc;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.serp-result-box {
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.serp-result-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.88rem;
+    color: #f8fafc;
+}
+
+.replacement-tag {
+    color: #00ff88;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.badge-era {
+    margin-left: auto;
+    font-size: 0.7rem;
+    padding: 0.15rem 0.45rem;
+    border-radius: 6px;
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.serp-reason {
+    font-size: 0.78rem;
+    color: #94a3b8;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.serp-code-preview {
+    background: #030712;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    padding: 0.4rem 0.65rem;
+    font-size: 0.75rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: #38bdf8;
+    overflow-x: auto;
+}
+
+.serp-mirror-link {
+    font-size: 0.74rem;
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+    color: #64748b;
+}
+
+.serp-mirror-link a {
+    color: #38bdf8;
+    text-decoration: underline;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Footer Highlights */
+.footer-partner-tag.highlight-tabpfn {
+    border-color: #00ff88;
+    color: #00ff88;
+    background: rgba(0, 255, 136, 0.08);
+    font-weight: 700;
+}
+
+.footer-partner-tag.highlight-serp {
+    border-color: #38bdf8;
+    color: #38bdf8;
+    background: rgba(56, 189, 248, 0.08);
+    font-weight: 700;
+}
+
+.footer-partner-tag.highlight-gemma {
+    border-color: #c084fc;
+    color: #c084fc;
+    background: rgba(192, 132, 252, 0.08);
+    font-weight: 700;
+}
+
+/* ==========================================================================
+   Halloween White Mode Overrides for Partner Cards & Banner
+   ========================================================================== */
+body:not(.halloween-off) .partner-badge.tabpfn {
+    background: #ffffff;
+    color: #059669;
+    border-color: #059669;
+}
+
+body:not(.halloween-off) .partner-badge.serpapi {
+    background: #ffffff;
+    color: #0284c7;
+    border-color: #0284c7;
+}
+
+body:not(.halloween-off) .partner-badge.gemma {
+    background: #ffffff;
+    color: #7c3aed;
+    border-color: #7c3aed;
+}
+
+body:not(.halloween-off) .partner-badge.auth0 {
+    background: #ffffff;
+    color: #db2777;
+    border-color: #db2777;
+}
+
+body:not(.halloween-off) .tldr-invariant-banner {
+    background: #ffffff;
+    border: 2px solid #e2e8f0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+body:not(.halloween-off) .tldr-text {
+    color: #1e293b;
+}
+
+body:not(.halloween-off) .tldr-text strong {
+    color: #b45309;
+}
+
+body:not(.halloween-off) .tldr-invariant {
+    background: #ecfdf5;
+    border-color: #10b981;
+    color: #047857;
+}
+
+body:not(.halloween-off) .tabpfn-card,
+body:not(.halloween-off) .serp-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+body:not(.halloween-off) .gauge-metric-main {
+    background: #f0fdf4;
+    border-color: #86efac;
+}
+
+body:not(.halloween-off) .gauge-value {
+    color: #059669;
+    text-shadow: none;
+}
+
+body:not(.halloween-off) .gauge-verdict {
+    color: #b45309;
+}
+
+body:not(.halloween-off) .gauge-label small {
+    color: #64748b;
+}
+
+body:not(.halloween-off) .telem-item {
+    background: #f8fafc;
+    border-color: #e2e8f0;
+}
+
+body:not(.halloween-off) .telem-item span {
+    color: #64748b;
+}
+
+body:not(.halloween-off) .telem-item strong {
+    color: #0f172a;
+}
+
+body:not(.halloween-off) .btn-serp-preset {
+    background: #f0f9ff;
+    border-color: #bae6fd;
+    color: #0369a1;
+}
+
+body:not(.halloween-off) .btn-serp-preset:hover,
+body:not(.halloween-off) .btn-serp-preset.active {
+    background: #0284c7;
+    color: #ffffff;
+    border-color: #0284c7;
+}
+
+body:not(.halloween-off) .serp-search-row input {
+    background: #ffffff;
+    border-color: #cbd5e1;
+    color: #0f172a;
+}
+
+body:not(.halloween-off) .serp-result-box {
+    background: #f8fafc;
+    border-color: #e2e8f0;
+}
+
+body:not(.halloween-off) .serp-result-header {
+    color: #0f172a;
+}
+
+body:not(.halloween-off) .replacement-tag {
+    color: #059669;
+}
+
+body:not(.halloween-off) .badge-era {
+    background: #fef2f2;
+    border-color: #fca5a5;
+    color: #b91c1c;
+}
+
+body:not(.halloween-off) .serp-reason {
+    color: #475569;
+}
+
+body:not(.halloween-off) .serp-code-preview {
+    background: #0f172a;
+    color: #38bdf8;
+}
+
+body:not(.halloween-off) .serp-mirror-link {
+    color: #64748b;
+}
+
+body:not(.halloween-off) .footer-partner-tag.highlight-tabpfn {
+    border-color: #059669;
+    color: #059669;
+    background: #ecfdf5;
+}
+
+body:not(.halloween-off) .footer-partner-tag.highlight-serp {
+    border-color: #0284c7;
+    color: #0284c7;
+    background: #f0f9ff;
+}
+
+body:not(.halloween-off) .footer-partner-tag.highlight-gemma {
+    border-color: #7c3aed;
+    color: #7c3aed;
+    background: #faf5ff;
+}

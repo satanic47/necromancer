@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Necromancer | The Ghost in the Machine</title>
-    <link rel="stylesheet" href="/static/style.css?v=2.2.0">
+    <link rel="stylesheet" href="/static/style.css?v=2.4.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💀</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -100,14 +100,16 @@
 
             <!-- Row 2: Targeted Partners (Uniform 1-Size-Fits-All) -->
             <div class="papel-picado-banner row-partners">
-                <div class="flag gold"><span class="flag-icon">🎙️</span><span class="flag-text">ELEVENLABS</span></div>
+                <div class="flag gold"><span class="flag-icon">📊</span><span class="flag-text">TABPFN 3.5</span></div>
+                <div class="flag cyan"><span class="flag-icon">🔍</span><span class="flag-text">SERPAPI</span></div>
+                <div class="flag green"><span class="flag-icon">🧠</span><span class="flag-text">GEMMA</span></div>
+                <div class="flag orange"><span class="flag-icon">🎙️</span><span class="flag-text">ELEVENLABS</span></div>
                 <div class="flag purple"><span class="flag-icon">🛡️</span><span class="flag-text">SENTRY</span></div>
                 <div class="flag cyan"><span class="flag-icon">☁️</span><span class="flag-text">RENDER</span></div>
-                <div class="flag orange"><span class="flag-icon">🌐</span><span class="flag-text">.TECH</span></div>
-                <div class="flag green"><span class="flag-icon">🍃</span><span class="flag-text">MONGODB</span></div>
+                <div class="flag gold"><span class="flag-icon">🌐</span><span class="flag-text">.TECH</span></div>
                 <div class="flag pink"><span class="flag-icon">🔒</span><span class="flag-text">AUTH0</span></div>
+                <div class="flag green"><span class="flag-icon">🍃</span><span class="flag-text">MONGODB</span></div>
                 <div class="flag crimson"><span class="flag-icon">⚡</span><span class="flag-text">BACKBOARD</span></div>
-                <div class="flag purple"><span class="flag-icon">🐳</span><span class="flag-text">SANDBOX</span></div>
             </div>
         </div>
 
@@ -133,9 +135,13 @@
                 </button>
                 <audio id="ambientVoiceLoop" src="/static/scary_ghost_loop.mp3" loop preload="auto"></audio>
                 <div class="partner-badges">
-                    <span class="partner-badge elevenlabs">🎙️ ElevenLabs Voice AI</span>
+                    <span class="partner-badge tabpfn">📊 Prior Labs TabPFN-3.5</span>
+                    <span class="partner-badge serpapi">🔍 SerpApi Grounding</span>
+                    <span class="partner-badge gemma">🧠 Open-Weight Gemma</span>
+                    <span class="partner-badge auth0">🔒 Auth0 Token Vault</span>
+                    <span class="partner-badge elevenlabs">🎙️ ElevenLabs Voice</span>
                     <span class="partner-badge sentry">🛡️ Sentry Tracing</span>
-                    <span class="partner-badge render">☁️ Render Cloud</span>
+                    <span class="partner-badge render">☁️ Render Deployed</span>
                 </div>
             </div>
         </header>
@@ -159,6 +165,14 @@
                 <div class="shrine-lantern">🏮</div>
             </div>
         </section>
+
+        <!-- TL;DR & Invariant Guarantee Banner (Ghost in the Machine) -->
+        <div class="tldr-invariant-banner">
+            <div class="tldr-badge">💀 GHOST IN THE MACHINE</div>
+            <div class="tldr-text">
+                <p><strong>TL;DR:</strong> Necromancer resurrects abandoned open-source repositories across 12 compiler epochs. <strong>Prior Labs TabPFN-3.5</strong> foundation model assesses tabular resurrectability; <strong>SerpApi</strong> crawls historical package mirrors &amp; replacement recipes; local open-weight <strong>Gemma</strong> writes surgical modernization patches inside an isolated Docker sandbox governed by <strong>Auth0 Token Vault</strong> security gates. <span class="tldr-invariant">⚡ The Iron Invariant: Zero baseline tests may be deleted or regressed.</span></p>
+            </div>
+        </div>
 
         <!-- Guided Demo Quick-Bar -->
         <div class="guided-demo-bar">
@@ -230,11 +244,11 @@
                         </div>
                     </form>
 
-                    <!-- Tombstone Preview -->
-                    <div id="tombstoneCard" class="tombstone-preview hidden">
+                    <!-- Tombstone Preview (Visible on Initial Load) -->
+                    <div id="tombstoneCard" class="tombstone-preview">
                         <div class="tombstone-header">
-                            <h3 id="tsName">Repository Name</h3>
-                            <span id="tsLang" class="lang-tag">Python</span>
+                            <h3 id="tsName">satanic47/necromancer</h3>
+                            <span id="tsLang" class="lang-tag">Python (Legacy 2.7 &rarr; 3.12)</span>
                         </div>
                         <div class="tombstone-grid">
                             <div><strong id="tsDormant">8.5</strong><small>Years Dormant</small></div>
@@ -244,11 +258,72 @@
                         <!-- Prior Labs TabPFN & Auth0 Agent Guard Badges -->
                         <div class="tombstone-partners-meta">
                             <div class="partner-meta-pill tabpfn-pill" title="Prior Labs TabPFN-3.5 Tabular Foundation Model Score">
-                                <span>📊 TabPFN Score:</span> <strong id="tsTabpfnScore">88.5%</strong>
+                                <span>📊 Prior Labs TabPFN:</span> <strong id="tsTabpfnScore">94.2% (High Confidence)</strong>
                             </div>
                             <div class="partner-meta-pill auth0-pill" title="Auth0 for AI Agents: Token Vault security gate">
-                                <span>🛡️ Auth0 Guard:</span> <strong id="tsAuth0Status">Active (Token Vault)</strong>
+                                <span>🔒 Auth0 Agent Guard:</span> <strong id="tsAuth0Status">Active (Token Vault)</strong>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Prior Labs TabPFN-3.5 Diagnostic Card -->
+                <div class="panel-card stone-card tabpfn-card">
+                    <div class="card-tombstone-top">
+                        <span class="tombstone-engraving">TABULAR FOUNDATION MODEL</span>
+                    </div>
+                    <h2 class="card-title">📊 Prior Labs TabPFN-3.5 Resurrectability</h2>
+                    <p class="card-desc">Zero-shot Bayesian tabular inference over repository telemetry.</p>
+                    <div class="tabpfn-gauge-box">
+                        <div class="gauge-metric-main">
+                            <div class="gauge-value" id="tabpfnScoreDisplay">94.2%</div>
+                            <div class="gauge-label">
+                                <span class="gauge-verdict" id="tabpfnVerdict">HIGH PROBABILITY</span>
+                                <small>Prior Labs TabPFN-3.5 Bayesian Prior</small>
+                            </div>
+                        </div>
+                        <div class="tabpfn-telemetry-grid">
+                            <div class="telem-item"><span>Dormancy</span><strong id="tabpfnDormancy">8.5 yrs</strong></div>
+                            <div class="telem-item"><span>LOC</span><strong id="tabpfnLoc">2,840</strong></div>
+                            <div class="telem-item"><span>Era</span><strong id="tabpfnEra">Py2.7 Sunset</strong></div>
+                            <div class="telem-item"><span>C-Ext Risk</span><strong id="tabpfnCExt">0 (Pure Python)</strong></div>
+                            <div class="telem-item"><span>Test Suite</span><strong id="tabpfnTests">14 Tests</strong></div>
+                            <div class="telem-item"><span>Dependencies</span><strong id="tabpfnDeps">3 Inactive</strong></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SerpApi Grounding & Migration Card -->
+                <div class="panel-card stone-card serp-card">
+                    <div class="card-tombstone-top">
+                        <span class="tombstone-engraving">HISTORICAL PACKAGE GROUNDING</span>
+                    </div>
+                    <h2 class="card-title">🔍 SerpApi Live Mirror Inspector</h2>
+                    <p class="card-desc">Crawl historical PyPI mirrors, PEP deprecations &amp; replacement recipes.</p>
+                    <div class="serp-quick-tags">
+                        <button type="button" class="btn-serp-preset active" data-query="imp">imp</button>
+                        <button type="button" class="btn-serp-preset" data-query="collections.Mapping">collections.Mapping</button>
+                        <button type="button" class="btn-serp-preset" data-query="urllib2">urllib2</button>
+                        <button type="button" class="btn-serp-preset" data-query="cgi.escape">cgi.escape</button>
+                        <button type="button" class="btn-serp-preset" data-query="nose">nose</button>
+                    </div>
+                    <div class="serp-search-row">
+                        <input type="text" id="serpQueryInput" placeholder="e.g. imp, collections.Mapping, urllib2" value="imp">
+                        <button type="button" id="btnSerpSearch" class="btn btn-secondary btn-sm">Inspect</button>
+                    </div>
+                    <div id="serpResultBox" class="serp-result-box">
+                        <div class="serp-result-header">
+                            <strong id="serpSymbol">imp</strong> &rarr; <span class="replacement-tag" id="serpTarget">importlib</span>
+                            <span class="badge-era" id="serpEraBadge">Removed in Py 3.12</span>
+                        </div>
+                        <p class="serp-reason" id="serpReason">Removed in Python 3.12 (PEP 3108). Replace with importlib or importlib.util.</p>
+                        <div class="serp-code-preview">
+                            <code id="serpCodeSnippet">import importlib.util  # modernized via SerpApi grounding</code>
+                        </div>
+                        <div class="serp-mirror-link">
+                            <span>Historical Mirror:</span>
+                            <a id="serpMirrorUrl" href="https://pypi.org/project/importlib-metadata/" target="_blank" rel="noopener">https://pypi.org/project/importlib-metadata/</a>
                         </div>
                     </div>
                 </div>
@@ -339,19 +414,22 @@
                     Honoring Open Source Creators on Día de los Muertos
                 </p>
                 <div class="footer-partners">
+                    <span class="footer-partner-tag highlight-tabpfn">📊 Prior Labs TabPFN-3.5</span>
+                    <span class="footer-partner-tag highlight-serp">🔍 SerpApi Grounding</span>
+                    <span class="footer-partner-tag highlight-gemma">🧠 Gemma (Open-Weight AI)</span>
                     <span class="footer-partner-tag">🎙️ ElevenLabs</span>
                     <span class="footer-partner-tag">🛡️ Sentry</span>
                     <span class="footer-partner-tag">☁️ Render</span>
                     <span class="footer-partner-tag">🌐 .tech Domains</span>
+                    <span class="footer-partner-tag">🔒 Auth0 Token Vault</span>
                     <span class="footer-partner-tag">🍃 MongoDB Atlas</span>
                     <span class="footer-partner-tag">🐳 Docker Sandbox</span>
-                    <span class="footer-partner-tag">🔒 Auth0</span>
                     <span class="footer-partner-tag">⚡ Backboard</span>
                 </div>
                 <div class="footer-meta">
                     <span>Built for <strong>Hacktoberfest 2026</strong> by MLH & DEV</span>
                     <span class="dot">•</span>
-                    <span>Powered by <strong>ElevenLabs</strong>, <strong>Sentry</strong>, <strong>Render</strong>, <strong>.tech Domains</strong>, <strong>MongoDB Atlas</strong>, <strong>Docker</strong> & <strong>Auth0</strong></span>
+                    <span>Powered by <strong>Prior Labs TabPFN</strong>, <strong>SerpApi</strong>, <strong>Gemma</strong>, <strong>ElevenLabs</strong>, <strong>Sentry</strong>, <strong>Render</strong>, <strong>.tech Domains</strong>, <strong>Auth0</strong>, <strong>MongoDB Atlas</strong> & <strong>Docker</strong></span>
                     <span class="dot">•</span>
                     <a href="https://github.com/satanic47/necromancer" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub Repository</a>
                 </div>
@@ -375,7 +453,7 @@
     <!-- Floating Toast Notifications -->
     <div id="toastContainer" class="toast-container" aria-live="polite"></div>
 
-    <script src="/static/app.js?v=2.3.0"></script>
+    <script src="/static/app.js?v=2.4.0"></script>
     <!-- Floating SFX & Theme Dock (.sfx-dock) direct from arcadepointscalci.in -->
     <div class="sfx-dock" aria-label="Halloween Theme & Sound Dock">
         <button type="button" id="btnHalloweenToggle" class="sfx-toggle sfx-theme" title="Toggle Spooky Halloween Theme (Webs, Pumpkins & Fog)">
