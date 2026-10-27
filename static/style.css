@@ -1362,6 +1362,31 @@ body.halloween-off .sfx-wisp {
     animation: pulseGlow 2.5s infinite alternate;
 }
 
+.footer-partners {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0.35rem 0 0.25rem;
+}
+
+.footer-partner-tag {
+    font-size: 0.78rem;
+    padding: 3px 10px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #c9c3d4;
+    transition: all 0.2s ease;
+}
+
+.footer-partner-tag:hover {
+    border-color: var(--marigold);
+    color: #ffffff;
+    box-shadow: 0 0 10px rgba(255, 117, 24, 0.3);
+}
+
 .footer-meta {
     display: flex;
     flex-wrap: wrap;
@@ -1670,6 +1695,20 @@ body:not(.halloween-off) .app-footer {
 
 body:not(.halloween-off) .footer-title {
     color: #0f172a;
+}
+
+body:not(.halloween-off) .footer-partner-tag {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    color: #334155;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+body:not(.halloween-off) .footer-partner-tag:hover {
+    background: #fff7ed;
+    border-color: var(--marigold);
+    color: #c2410c;
+    box-shadow: 0 2px 8px rgba(255, 117, 24, 0.2);
 }
 
 body:not(.halloween-off) .footer-meta {
