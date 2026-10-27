@@ -39,6 +39,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnPlaySampleEulogy = document.getElementById("btnPlaySampleEulogy");
     const heroAudioPlayer = document.getElementById("heroAudioPlayer");
     const eulogyPlayingNotice = document.getElementById("eulogyPlayingNotice");
+    const btnHalloweenToggle = document.getElementById("btnHalloweenToggle");
+    const btnDockSound = document.getElementById("btnDockSound");
+    const dockSoundIcon = document.getElementById("dockSoundIcon");
 
     let activeOfrendaHtml = "";
     let startTime = null;
@@ -150,6 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
             isSoundOn = true;
             soundIcon.textContent = "🔊";
             soundLabel.textContent = "Scary Voice & Ambient Drone: ON";
+            if (dockSoundIcon) dockSoundIcon.textContent = "🔊";
             btnToggleSound.classList.add("active");
             logTerminal("🔊 Scary Ghost Chanting Voice & Crypt Drone awakened!", "system");
             playBellToll();
@@ -187,6 +191,7 @@ document.addEventListener("DOMContentLoaded", () => {
         isSoundOn = false;
         soundIcon.textContent = "🔇";
         soundLabel.textContent = "Scary Voice & Ambient Drone: OFF";
+        if (dockSoundIcon) dockSoundIcon.textContent = "🔇";
         btnToggleSound.classList.remove("active");
         logTerminal("🔇 Ambient voices silenced.", "muted");
     }
@@ -806,4 +811,49 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+
+    // ==========================================
+    // 7. HALLOWEEN THEME TOGGLE & SFX DOCK
+    // ==========================================
+    // Initialize theme from localStorage (default: ON)
+    const savedTheme = localStorage.getItem("necromancer-halloween-theme");
+    if (savedTheme === "off") {
+        document.body.classList.add("halloween-off");
+        if (btnHalloweenToggle) btnHalloweenToggle.classList.add("is-off");
+    }
+
+    if (btnHalloweenToggle) {
+        btnHalloweenToggle.addEventListener("click", () => {
+            const isOff = document.body.classList.toggle("halloween-off");
+            btnHalloweenToggle.classList.toggle("is-off", isOff);
+            localStorage.setItem("necromancer-halloween-theme", isOff ? "off" : "on");
+            showToast(isOff ? "Clean Altar Theme Restored" : "🎃 Spooky Halloween Theme Activated!", isOff ? "normal" : "success");
+        });
+    }
+
+    // Sync dock sound button with header sound button
+    if (btnDockSound && btnToggleSound) {
+        btnDockSound.addEventListener("click", () => {
+            btnToggleSound.click();
+        });
+    }
+
+    // Atmospheric click spark wisps when Halloween theme is active
+    document.addEventListener("pointerdown", (e) => {
+        if (document.body.classList.contains("halloween-off")) return;
+        if (e.target.closest && e.target.closest(".sfx-dock")) return;
+        for (let i = 0; i < 3; i++) {
+            const wisp = document.createElement("span");
+            wisp.className = "sfx-wisp";
+            wisp.style.left = (e.clientX + (Math.random() * 16 - 8)) + "px";
+            wisp.style.top = (e.clientY + (Math.random() * 10 - 5)) + "px";
+            wisp.style.setProperty("--s", (Math.random() * 5 + 8) + "px");
+            wisp.style.setProperty("--rise", (Math.random() * 40 + 50) + "px");
+            wisp.style.setProperty("--sway", (Math.random() * 10 + 10) + "px");
+            wisp.style.setProperty("--dur", (Math.random() * 0.5 + 1.0) + "s");
+            wisp.style.setProperty("--delay", (i * 0.08) + "s");
+            document.body.appendChild(wisp);
+            setTimeout(() => wisp.remove(), 1800);
+        }
+    }, { passive: true });
 });

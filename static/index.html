@@ -27,6 +27,59 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
+    <!-- Halloween Overlay Elements (Direct from arcadepointscalci.in/calculator) -->
+    <div id="halloweenOverlay" class="halloween-layer">
+        <!-- Spooky Edge Fog Vignette -->
+        <div class="hw-fog"></div>
+
+        <!-- Top Left Cobweb -->
+        <div class="hw-item" style="top: 0; left: 0; width: 230px; --rot: 0deg; --flip: 1; --glow: rgba(139, 107, 255, 0.45);">
+            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img5.png" alt="Spiderweb" draggable="false">
+        </div>
+
+        <!-- Top Right Cobweb -->
+        <div class="hw-item" style="top: 0; right: 0; width: 230px; --rot: 0deg; --flip: 1; --glow: rgba(139, 107, 255, 0.45);">
+            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img3.png" alt="Spiderweb" draggable="false">
+        </div>
+
+        <!-- Hanging Animated Spider with Silk Thread on Left -->
+        <div class="hw-item hw-sway" style="top: 0; left: 14vw; width: 68px; --rot: 0deg; --flip: 1; --glow: rgba(139, 107, 255, 0.7);">
+            <span class="hw-thread" style="height: 110px;"></span>
+            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img4.png" alt="Hanging Spider" draggable="false">
+        </div>
+
+        <!-- Bottom Left: Haunted Tree, Trick or Treat Pumpkins, Cauldron, Potion -->
+        <div class="hw-item hw-nomob" style="bottom: 0; left: 0.5vw; width: 105px; --rot: -3deg; --flip: 1; --glow: rgba(0, 0, 0, 0.8);">
+            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img2.png" alt="Haunted Tree & Bats" draggable="false">
+        </div>
+        <div class="hw-item" style="bottom: 0; left: 5.5vw; width: 105px; --rot: -4deg; --flip: 1; --glow: rgba(255, 140, 0, 0.65);">
+            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img10.png" alt="Trick or Treat Pumpkin" draggable="false">
+        </div>
+        <div class="hw-item hw-nomob" style="bottom: 0; left: 12vw; width: 120px; --rot: 0deg; --flip: 1; --glow: rgba(255, 140, 0, 0.55);">
+            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img12.png" alt="Halloween Trick or Treat" draggable="false">
+        </div>
+        <div class="hw-item hw-nomob" style="bottom: 0; left: 19vw; width: 120px; --rot: 0deg; --flip: 1; --glow: rgba(90, 255, 140, 0.6);">
+            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img6.png" alt="Spooky Cauldron" draggable="false">
+        </div>
+        <div class="hw-item hw-nomob" style="bottom: 0; left: 26.5vw; width: 55px; --rot: 4deg; --flip: 1; --glow: rgba(160, 100, 255, 0.6);">
+            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img1.png" alt="Potion Bottle" draggable="false">
+        </div>
+
+        <!-- Bottom Right: Haunted Tree, Witch Hat, Screaming Pumpkin, Candle -->
+        <div class="hw-item hw-nomob" style="bottom: 0; right: 0.5vw; width: 130px; --rot: 5deg; --flip: 1; --glow: rgba(0, 0, 0, 0.8);">
+            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img8.png" alt="Haunted Tree & Witch Hat" draggable="false">
+        </div>
+        <div class="hw-item" style="bottom: 0; right: 7.5vw; width: 95px; --rot: 3deg; --flip: 1; --glow: rgba(255, 140, 0, 0.6);">
+            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img9.png" alt="Screaming Ghost Pumpkin" draggable="false">
+        </div>
+        <div class="hw-item hw-flicker hw-nomob" style="bottom: 0; right: 13.5vw; width: 55px; --rot: 0deg; --flip: 1; --glow: rgba(255, 170, 40, 0.85);">
+            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img7.png" alt="Flickering Candle" draggable="false">
+        </div>
+        <div class="hw-item hw-nomob" style="bottom: 0; right: 17.5vw; width: 75px; --rot: -3deg; --flip: -1; --glow: rgba(255, 140, 0, 0.5);">
+            <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/Halloween/img10.png" alt="Glowing Pumpkin" draggable="false">
+        </div>
+    </div>
+
     <!-- Ghostly Background Fog Canvas -->
     <canvas id="mistCanvas"></canvas>
 
@@ -286,5 +339,15 @@
     <div id="toastContainer" class="toast-container" aria-live="polite"></div>
 
     <script src="/static/app.js?v=2.3.0"></script>
+    <!-- Floating SFX & Theme Dock (.sfx-dock) direct from arcadepointscalci.in -->
+    <div class="sfx-dock" aria-label="Halloween Theme & Sound Dock">
+        <button type="button" id="btnHalloweenToggle" class="sfx-toggle sfx-theme" title="Toggle Spooky Halloween Theme (Webs, Pumpkins & Fog)">
+            🎃
+        </button>
+        <button type="button" id="btnDockSound" class="sfx-toggle" title="Toggle Ambient Ghost Drone & Voice">
+            <span id="dockSoundIcon">🔇</span>
+        </button>
+    </div>
+
 </body>
 </html>
