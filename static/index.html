@@ -14,7 +14,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="/static/style.css?v=2.6.0">
+    <link rel="stylesheet" href="/static/style.css?v=2.7.0">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 
     <!-- xterm.js Terminal with Fit Addon (Deferred for high Lighthouse LCP) -->
@@ -198,7 +198,7 @@
 
         <!-- Main Content -->
         <main class="main-layout">
-            <!-- Left Panel: Exhumation Altar -->
+            <!-- Left Panel: Exhumation Altar & Repository Setup -->
             <section class="altar-panel">
                 <div class="panel-card stone-card">
                     <div class="card-tombstone-top">
@@ -227,7 +227,7 @@
                                     <input type="radio" name="strategy" value="PIN_THE_PAST">
                                     <span class="radio-content">
                                         <strong>Pin the Past</strong>
-                                        <small>Retro mirrors & flags</small>
+                                        <small>Retro mirrors &amp; flags</small>
                                     </span>
                                 </label>
                                 <label class="radio-card">
@@ -269,69 +269,11 @@
                     </div>
                 </div>
 
-
-                <!-- Prior Labs TabPFN-3.5 Diagnostic Card -->
-                <div class="panel-card stone-card tabpfn-card">
-                    <div class="card-tombstone-top">
-                        <span class="tombstone-engraving">TABULAR FOUNDATION MODEL</span>
-                    </div>
-                    <h2 class="card-title">📊 Prior Labs TabPFN-3.5 Resurrectability</h2>
-                    <p class="card-desc">Zero-shot Bayesian tabular inference over repository telemetry.</p>
-                    <div class="tabpfn-gauge-box">
-                        <div class="gauge-metric-main">
-                            <div class="gauge-value" id="tabpfnScoreDisplay">94.2%</div>
-                            <div class="gauge-label">
-                                <span class="gauge-verdict" id="tabpfnVerdict">HIGH PROBABILITY</span>
-                                <small>Prior Labs TabPFN-3.5 Bayesian Prior</small>
-                            </div>
-                        </div>
-                        <div class="tabpfn-telemetry-grid">
-                            <div class="telem-item"><span>Dormancy</span><strong id="tabpfnDormancy">8.5 yrs</strong></div>
-                            <div class="telem-item"><span>LOC</span><strong id="tabpfnLoc">2,840</strong></div>
-                            <div class="telem-item"><span>Era</span><strong id="tabpfnEra">Py2.7 Sunset</strong></div>
-                            <div class="telem-item"><span>C-Ext Risk</span><strong id="tabpfnCExt">0 (Pure Python)</strong></div>
-                            <div class="telem-item"><span>Test Suite</span><strong id="tabpfnTests">14 Tests</strong></div>
-                            <div class="telem-item"><span>Dependencies</span><strong id="tabpfnDeps">3 Inactive</strong></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- SerpApi Grounding & Migration Card -->
-                <div class="panel-card stone-card serp-card">
-                    <div class="card-tombstone-top">
-                        <span class="tombstone-engraving">HISTORICAL PACKAGE GROUNDING</span>
-                    </div>
-                    <h2 class="card-title">🔍 SerpApi Live Mirror Inspector</h2>
-                    <p class="card-desc">Crawl historical PyPI mirrors, PEP deprecations &amp; replacement recipes.</p>
-                    <div class="serp-quick-tags">
-                        <button type="button" class="btn-serp-preset active" data-query="imp">imp</button>
-                        <button type="button" class="btn-serp-preset" data-query="collections.Mapping">collections.Mapping</button>
-                        <button type="button" class="btn-serp-preset" data-query="urllib2">urllib2</button>
-                        <button type="button" class="btn-serp-preset" data-query="cgi.escape">cgi.escape</button>
-                        <button type="button" class="btn-serp-preset" data-query="nose">nose</button>
-                    </div>
-                    <div class="serp-search-row">
-                        <input type="text" id="serpQueryInput" placeholder="e.g. imp, collections.Mapping, urllib2" value="imp">
-                        <button type="button" id="btnSerpSearch" class="btn btn-secondary btn-sm">Inspect</button>
-                    </div>
-                    <div id="serpResultBox" class="serp-result-box">
-                        <div class="serp-result-header">
-                            <strong id="serpSymbol">imp</strong> &rarr; <span class="replacement-tag" id="serpTarget">importlib</span>
-                            <span class="badge-era" id="serpEraBadge">Removed in Py 3.12</span>
-                        </div>
-                        <p class="serp-reason" id="serpReason">Removed in Python 3.12 (PEP 3108). Replace with importlib or importlib.util.</p>
-                        <div class="serp-code-preview">
-                            <code id="serpCodeSnippet">import importlib.util  # modernized via SerpApi grounding</code>
-                        </div>
-                        <div class="serp-mirror-link">
-                            <span>Historical Mirror:</span>
-                            <a id="serpMirrorUrl" href="https://pypi.org/project/importlib-metadata/" target="_blank" rel="noopener">https://pypi.org/project/importlib-metadata/</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Time-Machine Slider -->
+                <!-- Time-Machine Slider (Directly below Altar/Tombstone on Left) -->
                 <div class="panel-card stone-card time-machine-card">
+                    <div class="card-tombstone-top">
+                        <span class="tombstone-engraving">EPOCH SELECTOR</span>
+                    </div>
                     <h2 class="card-title">⏳ The Time-Machine Slider</h2>
                     <p class="card-desc">Scrub across compiler and dependency epochs (2008 – 2026).</p>
                     <div class="slider-wrapper">
@@ -344,12 +286,12 @@
                         </div>
                     </div>
                     <div id="sliderOutput" class="slider-output">
-                        <strong>Year 2026 (Modern):</strong> Contemporary packaging (PEP 621, pyproject.toml) & pytest runner. 100% test integrity.
+                        <strong>Year 2026 (Modern):</strong> Contemporary packaging (PEP 621, pyproject.toml) &amp; pytest runner. 100% test integrity.
                     </div>
                 </div>
             </section>
 
-            <!-- Right Panel: Live Séance Console -->
+            <!-- Right Panel: Live Séance Console & Intelligence Engines -->
             <section class="console-panel">
                 <div class="console-card stone-card">
                     <div class="console-header">
@@ -404,6 +346,69 @@
                         <button id="btnDownloadDeathCert" class="btn btn-secondary hidden">📜 Download PDF Death Certificate</button>
                     </div>
                 </div>
+
+                <!-- Twin Partner Intelligence Cards (Systematically fills the right side below the console!) -->
+                <div class="console-sub-cards">
+                    <!-- Prior Labs TabPFN-3.5 Diagnostic Card -->
+                    <div class="panel-card stone-card tabpfn-card">
+                        <div class="card-tombstone-top">
+                            <span class="tombstone-engraving">TABULAR FOUNDATION MODEL</span>
+                        </div>
+                        <h2 class="card-title">📊 Prior Labs TabPFN-3.5 Resurrectability</h2>
+                        <p class="card-desc">Zero-shot Bayesian tabular inference over repository telemetry.</p>
+                        <div class="tabpfn-gauge-box">
+                            <div class="gauge-metric-main">
+                                <div class="gauge-value" id="tabpfnScoreDisplay">94.2%</div>
+                                <div class="gauge-label">
+                                    <span class="gauge-verdict" id="tabpfnVerdict">HIGH PROBABILITY</span>
+                                    <small>Prior Labs TabPFN-3.5 Bayesian Prior</small>
+                                </div>
+                            </div>
+                            <div class="tabpfn-telemetry-grid">
+                                <div class="telem-item"><span>Dormancy</span><strong id="tabpfnDormancy">8.5 yrs</strong></div>
+                                <div class="telem-item"><span>LOC</span><strong id="tabpfnLoc">2,840</strong></div>
+                                <div class="telem-item"><span>Era</span><strong id="tabpfnEra">Py2.7 Sunset</strong></div>
+                                <div class="telem-item"><span>C-Ext Risk</span><strong id="tabpfnCExt">0 (Pure Python)</strong></div>
+                                <div class="telem-item"><span>Test Suite</span><strong id="tabpfnTests">14 Tests</strong></div>
+                                <div class="telem-item"><span>Dependencies</span><strong id="tabpfnDeps">3 Inactive</strong></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SerpApi Grounding & Migration Card -->
+                    <div class="panel-card stone-card serp-card">
+                        <div class="card-tombstone-top">
+                            <span class="tombstone-engraving">HISTORICAL PACKAGE GROUNDING</span>
+                        </div>
+                        <h2 class="card-title">🔍 SerpApi Live Mirror Inspector</h2>
+                        <p class="card-desc">Crawl historical PyPI mirrors, PEP deprecations &amp; replacement recipes.</p>
+                        <div class="serp-quick-tags">
+                            <button type="button" class="btn-serp-preset active" data-query="imp">imp</button>
+                            <button type="button" class="btn-serp-preset" data-query="collections.Mapping">collections.Mapping</button>
+                            <button type="button" class="btn-serp-preset" data-query="urllib2">urllib2</button>
+                            <button type="button" class="btn-serp-preset" data-query="cgi.escape">cgi.escape</button>
+                            <button type="button" class="btn-serp-preset" data-query="nose">nose</button>
+                        </div>
+                        <div class="serp-search-row">
+                            <input type="text" id="serpQueryInput" placeholder="e.g. imp, collections.Mapping, urllib2" value="imp">
+                            <button type="button" id="btnSerpSearch" class="btn btn-secondary btn-sm">Inspect</button>
+                        </div>
+                        <div id="serpResultBox" class="serp-result-box">
+                            <div class="serp-result-header">
+                                <strong id="serpSymbol">imp</strong> &rarr; <span class="replacement-tag" id="serpTarget">importlib</span>
+                                <span class="badge-era" id="serpEraBadge">Removed in Py 3.12</span>
+                            </div>
+                            <p class="serp-reason" id="serpReason">Removed in Python 3.12 (PEP 3108). Replace with importlib or importlib.util.</p>
+                            <div class="serp-code-preview">
+                                <code id="serpCodeSnippet">import importlib.util  # modernized via SerpApi grounding</code>
+                            </div>
+                            <div class="serp-mirror-link">
+                                <span>Historical Mirror:</span>
+                                <a id="serpMirrorUrl" href="https://pypi.org/project/importlib-metadata/" target="_blank" rel="noopener">https://pypi.org/project/importlib-metadata/</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </section>
         </main>
 
@@ -455,7 +460,7 @@
     <!-- Floating Toast Notifications -->
     <div id="toastContainer" class="toast-container" aria-live="polite"></div>
 
-    <script src="/static/app.js?v=2.6.0"></script>
+    <script src="/static/app.js?v=2.7.0"></script>
     <!-- Floating SFX & Theme Dock (.sfx-dock) direct from arcadepointscalci.in -->
     <div class="sfx-dock" aria-label="Halloween Theme & Sound Dock">
         <button type="button" id="btnHalloweenToggle" class="sfx-toggle sfx-theme" title="Toggle Spooky Halloween Theme (Webs, Pumpkins & Fog)">

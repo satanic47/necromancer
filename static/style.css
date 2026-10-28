@@ -2719,3 +2719,49 @@ body {
         grid-template-columns: 1fr !important;
     }
 }
+
+/* ==========================================================================
+   Systematic Layout: Twin Intelligence Cards below Séance Console
+   ========================================================================== */
+.main-layout {
+    display: grid;
+    grid-template-columns: 460px 1fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.console-sub-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+    align-items: stretch;
+}
+
+.console-sub-cards .panel-card {
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.console-sub-cards .panel-card .tabpfn-gauge-box,
+.console-sub-cards .panel-card .serp-result-box {
+    margin-top: auto;
+}
+
+@media (max-width: 1240px) {
+    .console-sub-cards {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .main-layout {
+        grid-template-columns: 1fr !important;
+        gap: 1rem;
+    }
+    .console-sub-cards {
+        grid-template-columns: 1fr !important;
+    }
+}
