@@ -407,6 +407,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 convertEol: true,
                 scrollback: 5000,
             });
+    function safeFitTerminal() {
+        if (!fitAddon || !term) return;
+        try {
+            const dims = fitAddon.proposeDimensions();
+            if (dims && dims.cols && dims.rows) {
+                // Reserve 2 safe columns margin so text never collides with or wraps onto the scrollbar!
+                const safeCols = Math.max(20, dims.cols - 2);
+                term.resize(safeCols, dims.rows);
+            } else {
+                fitAddon.fit();
+            }
+        } catch (e) {
+            try { fitAddon.fit(); } catch (_) {}
+        }
+    }
+
             if (typeof FitAddon !== "undefined" && FitAddon.FitAddon) {
                 fitAddon = new FitAddon.FitAddon();
                 term.loadAddon(fitAddon);
@@ -414,12 +430,12 @@ document.addEventListener("DOMContentLoaded", () => {
             const container = document.getElementById("xtermContainer");
             if (container) {
                 term.open(container);
-                if (fitAddon) fitAddon.fit();
+                safeFitTerminal();
                 term.writeln("\x1b[1;35m=== Necromancer Ghost in the Machine Séance Initialized ===\x1b[0m");
                 term.writeln("\x1b[90mAwaiting exhumation instruction to awaken the spirits of legacy code...\x1b[0m\r\n");
             }
             window.addEventListener("resize", () => {
-                if (fitAddon) fitAddon.fit();
+                safeFitTerminal();
             });
         }
     } catch (err) {
@@ -433,7 +449,7 @@ document.addEventListener("DOMContentLoaded", () => {
             tabDiff.classList.remove("active");
             terminalPane.classList.remove("hidden");
             diffPane.classList.add("hidden");
-            if (fitAddon) fitAddon.fit();
+            safeFitTerminal();
         });
 
         tabDiff.addEventListener("click", () => {
@@ -927,22 +943,28 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!res.ok) throw new Error(await res.text());
             const data = await res.json();
 
+            const queryName = data.query || data.package_or_module || query;
+            const targetMod = data.target || (data.suggested_import ? data.suggested_import.replace(/^import\s+|^from\s+/, '').split(' ')[0] : "importlib.util");
+            const eraLabel = data.era || (data.issue_type ? data.issue_type.replace(/_/g, ' ').toUpperCase() : "MODERNIZED");
+            const reasonText = data.reason || data.recommended_fix || "Deprecated standard library symbol modernized.";
+            const mirrorUrl = data.mirror_url || data.source_url || "https://pypi.org/";
+
             const symEl = document.getElementById("serpSymbol");
-            if (symEl) symEl.textContent = data.query;
+            if (symEl) symEl.textContent = queryName;
             const tgtEl = document.getElementById("serpTarget");
-            if (tgtEl) tgtEl.textContent = data.target || "modern equivalent";
+            if (tgtEl) tgtEl.textContent = targetMod;
             const eraEl = document.getElementById("serpEraBadge");
-            if (eraEl) eraEl.textContent = data.era || "Modernized";
+            if (eraEl) eraEl.textContent = eraLabel;
             const rsnEl = document.getElementById("serpReason");
-            if (rsnEl) rsnEl.textContent = data.reason || "Deprecated in legacy runtime.";
+            if (rsnEl) rsnEl.textContent = reasonText;
             const codeEl = document.getElementById("serpCodeSnippet");
-            if (codeEl) codeEl.textContent = data.code_snippet || `import ${data.target}`;
+            if (codeEl) codeEl.textContent = data.code_snippet || `import ${targetMod}`;
             const linkEl = document.getElementById("serpMirrorUrl");
             if (linkEl) {
-                linkEl.href = data.mirror_url || "https://pypi.org/";
-                linkEl.textContent = data.mirror_url || "https://pypi.org/";
+                linkEl.href = mirrorUrl;
+                linkEl.textContent = mirrorUrl;
             }
-            logTerminal(`🔍 SerpApi Grounding: Searched '${query}' &rarr; Migrated to '${data.target}' (${data.era})`, "thought");
+            logTerminal(`🔍 SerpApi Grounding: Searched '${queryName}' -> Migrated to '${targetMod}' (${eraLabel})`, "thought");
             showToast(`SerpApi Grounding: Found migration for '${query}'`, "success", 2500);
         } catch (err) {
             console.error("SerpApi inspect error:", err);

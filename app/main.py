@@ -571,4 +571,12 @@ async def auth0_evaluate_endpoint(req: Auth0ActionQuery):
 async def serp_migration_endpoint(query: str = "imp"):
     """SerpApi live grounding for historical mirrors and syntax migration guides."""
     guidance = serp_crawler.search_migration(module_or_package=query)
-    return asdict(guidance)
+    data = asdict(guidance)
+    # Extract clean target symbol
+    target_mod = guidance.suggested_import.replace("import ", "").replace("from ", "").split()[0]
+    data["query"] = guidance.package_or_module
+    data["target"] = target_mod
+    data["era"] = guidance.issue_type.replace("_", " ").title()
+    data["reason"] = guidance.recommended_fix
+    data["mirror_url"] = guidance.source_url
+    return data
