@@ -10,6 +10,7 @@ ElevenLabs Text-to-Speech API.
 from __future__ import annotations
 
 import base64
+import logging
 import os
 from dataclasses import dataclass
 from pathlib import Path
@@ -18,6 +19,8 @@ from typing import Optional
 import httpx
 
 from core.exhume import RepositoryTombstone
+
+logger = logging.getLogger(__name__)
 
 
 DEFAULT_VOICE_ID = "vfaqCOvlrKi4Zp7C2IAm"  # "Malyx" - Echoey, Menacing and Deep Demon Monster
